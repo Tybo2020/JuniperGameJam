@@ -1,17 +1,22 @@
 [gd_scene format=3 uid="uid://cd3wht61v6d8x"]
 
 [ext_resource type="PackedScene" uid="uid://c4mb6fm3ritku" path="res://scenes/player.tscn" id="1_uwrxv"]
-[ext_resource type="Script" uid="uid://eml1ej1s0rcc" path="res://scripts/player.gd" id="2_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://bx45we0f3xrn3" path="res://scenes/base_enemy.tscn" id="3_lnu2h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
 size = Vector2(357.398, 24.492)
 
 [node name="Game" type="Node2D" unique_id=1798005338]
 
-[node name="Player" parent="." unique_id=110377226 instance=ExtResource("1_uwrxv")]
+[node name="BaseEnemy" parent="." unique_id=1470898494 groups=["enemies"] instance=ExtResource("3_lnu2h")]
+position = Vector2(265, -105)
+collision_layer = 2
+collision_mask = 5
+
+[node name="Player" parent="." unique_id=110377226 groups=["enemies", "player"] instance=ExtResource("1_uwrxv")]
 position = Vector2(21, 4)
 rotation = 0.0050099427
-script = ExtResource("2_yqjtg")
+collision_mask = 6
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1614857125]
 position = Vector2(22, 3)
@@ -20,28 +25,33 @@ zoom = Vector2(1.885, 1.885)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1080591830]
 rotation = -0.002170973
+collision_layer = 4
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=839511613]
-position = Vector2(70.215454, 103.00002)
+position = Vector2(43.650375, 161.09514)
 scale = Vector2(1.0000002, 1.0000002)
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=1808015622]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=243083184]
-position = Vector2(74, -112)
+position = Vector2(70, -170)
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1251233909]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1073472463]
-position = Vector2(197.88625, -17.902496)
+position = Vector2(235, 0)
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=2114059071]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3" unique_id=517712878]
-position = Vector2(-55, 12.548752)
+position = Vector2(-119, -4)
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_3vyb7")
