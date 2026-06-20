@@ -1,22 +1,22 @@
 [gd_scene format=3 uid="uid://c4mb6fm3ritku"]
 
-[ext_resource type="Texture2D" uid="uid://s7xrwovv5clb" path="res://assets/16x16 Idle-Sheet.png" id="1_3vyb7"]
+[ext_resource type="Texture2D" uid="uid://dr2a418suoft1" path="res://assets/idle.png" id="1_3vyb7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("1_3vyb7")
-region = Rect2(0, 0, 24, 30)
+region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qhqgy"]
 atlas = ExtResource("1_3vyb7")
-region = Rect2(24, 0, 24, 30)
+region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dqkch"]
 atlas = ExtResource("1_3vyb7")
-region = Rect2(48, 0, 24, 30)
+region = Rect2(64, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg0r"]
 atlas = ExtResource("1_3vyb7")
-region = Rect2(72, 0, 24, 30)
+region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6qh5s"]
 animations = [{
@@ -35,7 +35,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 6.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qixts"]
@@ -44,7 +44,7 @@ animations = [{
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1930231776]
 sprite_frames = SubResource("SpriteFrames_6qh5s")
-frame_progress = 0.5894889
+frame_progress = 0.56597906
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1215988259]
 position = Vector2(0, 2)
