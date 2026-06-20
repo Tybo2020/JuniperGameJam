@@ -4,22 +4,26 @@
 [ext_resource type="Script" uid="uid://eml1ej1s0rcc" path="res://scripts/player.gd" id="2_yqjtg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
-size = Vector2(358.9025, 8.2275)
+size = Vector2(357.398, 24.492)
 
 [node name="Game" type="Node2D" unique_id=1798005338]
 
 [node name="Player" parent="." unique_id=110377226 instance=ExtResource("1_uwrxv")]
 position = Vector2(21, 4)
+rotation = 0.0050099427
 script = ExtResource("2_yqjtg")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1614857125]
 position = Vector2(22, 3)
-zoom = Vector2(1.36, 1.36)
+rotation = -0.00077904883
+zoom = Vector2(1.885, 1.885)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1080591830]
+rotation = -0.002170973
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=839511613]
-position = Vector2(71, 103)
+position = Vector2(70.215454, 103.00002)
+scale = Vector2(1.0000002, 1.0000002)
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=1808015622]

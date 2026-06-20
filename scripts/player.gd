@@ -51,13 +51,11 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 	if bounces > maxBounces:
 		bounces = 0
 		return
-		
-	# Get the normal vector from the collision
-	var collisionNormal = collision.get_normal()
 	
+	var reflect = collision.get_remainder().bounce(collision.get_normal())
 	# Calculate the bounce direction
-	velocity = velocity.bounce(collisionNormal)
-	rotation = velocity.angle()
+	velocity = velocity.bounce(collision.get_normal())
+	move_and_collide(reflect)
 	
 func executeLaunch() -> void:
 	isCharging = false 
