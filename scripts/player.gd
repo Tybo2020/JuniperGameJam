@@ -1,40 +1,91 @@
 extends CharacterBody2D
 
-@export var maxBounces: int = 3
-@export var maxChargeTime: float = 2.0
+###### Launch configuration #######
+@export var maxChargeTime: float = 1.0
 @export var minLaunchStrength: float = 50.0
-@export var maxLaunchStrength: float = 1200.0 
-@export var launchDecay: float = 5.0
+@export var maxLaunchStrength: float = 1000.0 
+@export var launchDecay: float = 5
+@export var killVelocityThreshold: float = 800.0
 
 var isCharging: bool = false
+var isLaunched: bool = false
 var currentChargeTime: float = 0.0
 var launchVelocity: Vector2 = Vector2.ZERO
 
-const SPEED = 300.0
+###### Bounce Configuration #######
+@onready var bounceDetector: Area2D = $BounceDetector
+@export var maxBounces: int = 3
+@export var bounceWindowDuration: float = 0.4 # 12 frames at 60fps
+@export var bounceCooldown: float = 0.4
+
 var bounces: int = 0
-func _physics_process(delta: float) -> void:
-	## Get the input direction and handle the movement/deceleration.
-	#var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-#
-	## Normalize vectors
-	#var direction = input_dir.normalized() 
-#
-	#if direction:
-		#velocity.x = direction.x * SPEED
-		#velocity.y = direction.y * SPEED 
-	#else:
-		#velocity.x = move_toward(velocity.x, 0, SPEED)
-		#velocity.y = move_toward(velocity.y, 0, SPEED)
+var isBouncing: bool = false
+var canBounce: bool = true
+var comboCounter: int = 0
+
+const HALT_SPEED = 1000
+const SPEED = 100.0
+
+signal hit
+
+func _on_body_entered(_body):
+	hide() # Player disappears after being hit.
+	hit.emit()
+	# Must be deferred as we can't change physics properties on a physics callback.
+	$CollisionShape2D.set_deferred("disabled", true)
 	
+func start(pos):
+	position = pos
+	show()
+	$CollisionShape2D.disabled = false
+	
+func _ready() -> void:
+	hide()
+	# Connect signal so it triggers if an object enters while pressing bounce key
+	bounceDetector.body_entered.connect(_on_bounce_detector_body_entered)
+	
+func _on_bounce_detector_body_entered(body: Node2D) -> void:
+	if isBouncing:
+		executeSuccessfulBounce(body, null)
+
+func _physics_process(delta: float) -> void:
+	
+	# Get the input direction and handle the movement/deceleration.
+	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	
+	
+	if !isLaunched:
+		# Normalize vectors
+		var direction = input_dir.normalized() 
+		if direction:
+			velocity = direction * SPEED
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
+
+		
 	if isCharging: 
 		currentChargeTime += delta 
 		print("ChargeTime: ", currentChargeTime)
 		currentChargeTime = clamp(currentChargeTime, 0.0, maxChargeTime)
 	
 	var collisionInfo = move_and_collide(velocity * delta)
-	
-	if collisionInfo:
+	if collisionInfo and isBouncing:
+		executeSuccessfulBounce(collisionInfo.get_collider(), collisionInfo)
+	elif collisionInfo:
 		handleBounce(collisionInfo)
+		
+	if isLaunched:
+		# Natural decay every frame
+		velocity = velocity.move_toward(Vector2.ZERO, velocity.length() * (delta / launchDecay))
+
+		# Hold "halt" to brake faster
+		if Input.is_action_pressed("halt"):
+			velocity = velocity.move_toward(Vector2.ZERO, HALT_SPEED * delta)
+
+		# Clear launched state once basically stopped
+		if velocity.length_squared() < 5.0:
+			velocity = Vector2.ZERO
+			isLaunched = false
 		
 func _input(event):
 	if event.is_action_pressed("charge"):
@@ -45,20 +96,30 @@ func _input(event):
 	if event.is_action_released("charge") and isCharging:
 		print("Charge released, launching")
 		executeLaunch()
-
+	
+	if event.is_action_pressed("bounce") and canBounce:
+		triggerBounceWindow()
+		
 func handleBounce(collision: KinematicCollision2D) -> void:
 	bounces += 1
 	if bounces > maxBounces:
 		bounces = 0
 		return
+	var obstacle = collision.get_collider()
+	
+	if obstacle.is_in_group("enemies"):
+		if velocity.length() >= killVelocityThreshold:
+			obstacle.die()
+			return
 	
 	var reflect = collision.get_remainder().bounce(collision.get_normal())
-	# Calculate the bounce direction
+	## Calculate the bounce direction
 	velocity = velocity.bounce(collision.get_normal())
 	move_and_collide(reflect)
 	
 func executeLaunch() -> void:
 	isCharging = false 
+	isLaunched = true
 	# Calculate chargeTime ratio
 	var chargeRatio = (currentChargeTime / maxChargeTime)
 
@@ -72,3 +133,43 @@ func executeLaunch() -> void:
 	# Apply velocity
 	velocity = launchDirection * launchForce 
 	print("Launch velocity: ", velocity)
+
+func triggerBounceWindow() -> void:
+	isBouncing = true
+	canBounce = false
+	print("Bounce window OPENED")
+	
+	# Create a timer for the duration of the window
+	await get_tree().create_timer(bounceWindowDuration).timeout
+	isBouncing = false
+	print("Bounce window Closed")
+	
+	# Create a timer for the recovery cooldown penalty 
+	# Can decide later if we want to keep a penalty or find another way 
+	# to reward the player for timing the bounce successfully
+	#await get_tree().create_timer(bounceCooldown).timeout
+	canBounce = true
+
+func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D = null) -> bool:
+	# Close the bounce window on success
+	isBouncing = false
+	print("Successfully timed bounce on: ", obstacle.name)
+	
+	# If executed on an enemy, destory it here 
+	if obstacle.is_in_group("enemies"):
+		if velocity.length() >= killVelocityThreshold:
+			obstacle.die()
+		else:
+			obstacle.die()
+	
+	# Execute the bounce 
+	if collision:
+		handleBounce(collision)
+	# Update combo counter 
+	comboCounter += 1
+	
+	# Update game feel 
+	velocity *= 1.2
+	
+	return true
+	

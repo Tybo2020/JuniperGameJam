@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://c4mb6fm3ritku"]
 
 [ext_resource type="Texture2D" uid="uid://dr2a418suoft1" path="res://assets/idle.png" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://eml1ej1s0rcc" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="PackedScene" uid="uid://destx0wjclppx" path="res://scenes/bounce_detector.tscn" id="2_qhqgy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("1_3vyb7")
@@ -41,6 +43,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_qixts"]
 
 [node name="Player" type="CharacterBody2D" unique_id=110377226]
+script = ExtResource("1_g2els")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1930231776]
 sprite_frames = SubResource("SpriteFrames_6qh5s")
@@ -50,3 +53,8 @@ frame_progress = 0.56597906
 position = Vector2(-8, 2)
 scale = Vector2(0.95, 0.95)
 shape = SubResource("CircleShape2D_qixts")
+
+[node name="BounceDetector" parent="." unique_id=535892709 instance=ExtResource("2_qhqgy")]
+position = Vector2(7.6293945e-06, -3.8146973e-06)
+scale = Vector2(1.68, 1.68)
+collision_layer = 2

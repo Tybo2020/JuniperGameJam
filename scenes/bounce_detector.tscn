@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://destx0wjclppx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qixts"]
+
+[node name="BounceDetector" type="Area2D" unique_id=535892709]
+collision_layer = 0
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=872817510]
+shape = SubResource("RectangleShape2D_qixts")
