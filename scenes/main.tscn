@@ -6,7 +6,7 @@
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 128, 128, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0)
+"points": PackedVector2Array(0, 0, 0, 0, -96, -48, 0, 0, 0, 0, 312, -48, 0, 0, 0, 0, 312, 216, 0, 0, 0, 0, -96, 216, 0, 0, 0, 0, -96, -48)
 }
 point_count = 5
 
@@ -15,6 +15,7 @@ script = ExtResource("1_o5qli")
 enemy_scene = ExtResource("2_0wfyh")
 
 [node name="Player" parent="." unique_id=110377226 groups=["player"] instance=ExtResource("3_sugp2")]
+position = Vector2(64, 40)
 collision_mask = 6
 
 [node name="EnemyTimer" type="Timer" parent="." unique_id=85056071]
@@ -33,6 +34,11 @@ position = Vector2(54, 85)
 curve = SubResource("Curve2D_sgp6g")
 
 [node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath" unique_id=1819592132]
+position = Vector2(-96, -48)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=102011268]
+position = Vector2(56, 56)
+zoom = Vector2(1.21, 1.21)
 
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]

@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 ###### Launch configuration #######
 @export var maxChargeTime: float = 1.0
+@export var maxLaunchPullback: float = 2000.0 # pixels away from inital POS
 @export var minLaunchStrength: float = 50.0
 @export var maxLaunchStrength: float = 1000.0 
 @export var launchDecay: float = 5
@@ -11,6 +12,10 @@ var isCharging: bool = false
 var isLaunched: bool = false
 var currentChargeTime: float = 0.0
 var launchVelocity: Vector2 = Vector2.ZERO
+
+var initialMousePos: Vector2 = Vector2.ZERO
+var chargeRatio: float = 0.0
+var launchDirection: Vector2 = Vector2.ZERO
 
 ###### Bounce Configuration #######
 @onready var bounceDetector: Area2D = $BounceDetector
@@ -49,10 +54,8 @@ func _on_bounce_detector_body_entered(body: Node2D) -> void:
 		executeSuccessfulBounce(body, null)
 
 func _physics_process(delta: float) -> void:
-	
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	
 	
 	if !isLaunched:
 		# Normalize vectors
@@ -63,10 +66,11 @@ func _physics_process(delta: float) -> void:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
 
 		
-	if isCharging: 
-		currentChargeTime += delta 
-		print("ChargeTime: ", currentChargeTime)
-		currentChargeTime = clamp(currentChargeTime, 0.0, maxChargeTime)
+	if isCharging:
+		var currentMousePos = get_local_mouse_position()
+		var distance = currentMousePos.distance_to(initialMousePos)
+		launchDirection = currentMousePos.direction_to(initialMousePos)
+		chargeRatio = clamp(distance / maxLaunchPullback, 0.0, 1.0)
 	
 	var collisionInfo = move_and_collide(velocity * delta)
 	if collisionInfo and isBouncing:
@@ -87,13 +91,18 @@ func _physics_process(delta: float) -> void:
 			velocity = Vector2.ZERO
 			isLaunched = false
 		
+
+
 func _input(event):
 	if event.is_action_pressed("charge"):
-		print("Charge key pressed")
 		isCharging = true
-		currentChargeTime = 0.0
+		initialMousePos = get_local_mouse_position()
+		#print("Charge key pressed")
+		#isCharging = true
+		#currentChargeTime = 0.0
 	
 	if event.is_action_released("charge") and isCharging:
+		isCharging = false
 		print("Charge released, launching")
 		executeLaunch()
 	
@@ -121,13 +130,13 @@ func executeLaunch() -> void:
 	isCharging = false 
 	isLaunched = true
 	# Calculate chargeTime ratio
-	var chargeRatio = (currentChargeTime / maxChargeTime)
+	#chargeRatio = (currentChargeTime / maxChargeTime)
 
 	# Calculate launchForce 
 	var launchForce = lerp(minLaunchStrength, maxLaunchStrength, chargeRatio)
 
 	# Determine launch direction 
-	var launchDirection = get_local_mouse_position().normalized()
+	#launchDirection = get_local_mouse_position().normalized()
 	print("Mouse position: ", launchDirection)
 
 	# Apply velocity
@@ -137,12 +146,12 @@ func executeLaunch() -> void:
 func triggerBounceWindow() -> void:
 	isBouncing = true
 	canBounce = false
-	print("Bounce window OPENED")
+	#print("Bounce window OPENED")
 	
 	# Create a timer for the duration of the window
 	await get_tree().create_timer(bounceWindowDuration).timeout
 	isBouncing = false
-	print("Bounce window Closed")
+	#print("Bounce window Closed")
 	
 	# Create a timer for the recovery cooldown penalty 
 	# Can decide later if we want to keep a penalty or find another way 
@@ -153,7 +162,7 @@ func triggerBounceWindow() -> void:
 func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D = null) -> bool:
 	# Close the bounce window on success
 	isBouncing = false
-	print("Successfully timed bounce on: ", obstacle.name)
+	#print("Successfully timed bounce on: ", obstacle.name)
 	
 	# If executed on an enemy, destory it here 
 	if obstacle.is_in_group("enemies"):
