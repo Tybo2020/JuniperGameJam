@@ -1,8 +1,11 @@
 extends CharacterBody2D
+@onready var aim_line: Line2D = $AimLine
+@export var lowChargeColor: Color = Color.YELLOW
+@export var highChargeColor: Color = Color.RED
 
 ###### Launch configuration #######
 @export var maxChargeTime: float = 1.0
-@export var maxLaunchPullback: float = 2000.0 # pixels away from inital POS
+@export var maxLaunchPullback: float = 1000.0 # pixels away from inital POS
 @export var minLaunchStrength: float = 50.0
 @export var maxLaunchStrength: float = 1000.0 
 @export var launchDecay: float = 5
@@ -48,6 +51,7 @@ func _ready() -> void:
 	hide()
 	# Connect signal so it triggers if an object enters while pressing bounce key
 	bounceDetector.body_entered.connect(_on_bounce_detector_body_entered)
+	aim_line.visible = false
 	
 func _on_bounce_detector_body_entered(body: Node2D) -> void:
 	if isBouncing:
@@ -71,6 +75,8 @@ func _physics_process(delta: float) -> void:
 		var distance = currentMousePos.distance_to(initialMousePos)
 		launchDirection = currentMousePos.direction_to(initialMousePos)
 		chargeRatio = clamp(distance / maxLaunchPullback, 0.0, 1.0)
+		
+		update_aim_line()
 	
 	var collisionInfo = move_and_collide(velocity * delta)
 	if collisionInfo and isBouncing:
@@ -142,6 +148,7 @@ func executeLaunch() -> void:
 	# Apply velocity
 	velocity = launchDirection * launchForce 
 	print("Launch velocity: ", velocity)
+	aim_line.visible = false
 
 func triggerBounceWindow() -> void:
 	isBouncing = true
@@ -181,4 +188,8 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 	velocity *= 1.2
 	
 	return true
-	
+# Temporary function to show launch strength visually
+func update_aim_line() -> void:
+	aim_line.visible = true
+	aim_line.points = [Vector2.ZERO, launchDirection * chargeRatio * maxLaunchPullback]
+	aim_line.default_color = lowChargeColor.lerp(highChargeColor, chargeRatio)

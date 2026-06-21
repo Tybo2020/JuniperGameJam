@@ -206,3 +206,5 @@ shape = SubResource("CircleShape2D_qixts")
 position = Vector2(-0.9999924, 4.7683716e-07)
 scale = Vector2(1.68, 1.68)
 collision_layer = 2
+
+[node name="AimLine" type="Line2D" parent="." unique_id=2097750775]
