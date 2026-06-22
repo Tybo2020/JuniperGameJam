@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://ce4eft0tw0hcm"]
+
+[ext_resource type="Script" uid="uid://dg061arga5wt1" path="res://scripts/heart_sprite.gd" id="1_87202"]
+[ext_resource type="Texture2D" uid="uid://5sm2v1j6iup7" path="res://assets/hearts.png" id="1_tkohf"]
+
+[node name="heartSprite" type="Panel" unique_id=1725481708]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 18.0
+offset_bottom = 17.0
+script = ExtResource("1_87202")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2049099709]
+scale = Vector2(2, 2)
+texture = ExtResource("1_tkohf")
+centered = false
+hframes = 5

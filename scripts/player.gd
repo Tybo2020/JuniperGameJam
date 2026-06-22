@@ -2,7 +2,8 @@ extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
 @export var lowChargeColor: Color = Color.YELLOW
 @export var highChargeColor: Color = Color.RED
-@export var healthCount: int = 3
+@export var maxHealthCount: int = 3
+var currentHealthCount: int = 0
 
 ###### Launch configuration #######
 @export var maxChargeTime: float = 1.0
@@ -25,7 +26,7 @@ var launchDirection: Vector2 = Vector2.ZERO
 ###### Bounce Configuration #######
 @onready var bounceDetector: Area2D = $BounceDetector
 @export var maxBounces: int = 3
-@export var bounceWindowDuration: float = 0.4 # 12 frames at 60fps
+@export var bounceWindowDuration: float = 0.4 # 24 frames at 60fps
 @export var bounceCooldown: float = 0.4
 
 var bounces: int = 0
@@ -38,16 +39,34 @@ const SPEED = 100.0
 
 signal hit
 
-func _hit():
-	pass
+var isInvulnerable: bool = false
 
 func _on_body_entered(_body):
-	hide() # Player disappears after being hit.
-	hit.emit()
-	# Must be deferred as we can't change physics properties on a physics callback.
-	$CollisionShape2D.set_deferred("disabled", true)
+	if isInvulnerable:
+		return
+	_hit()
+
+func _hit() -> void:
+	if isInvulnerable:
+		return
+		
+	currentHealthCount -= 1
+	print("Hit! Health remaining: ", currentHealthCount)
+	hit.emit(currentHealthCount)
+	
+	if currentHealthCount <= 0:
+		hide()
+		hit.emit()
+		$CollisionShape2D.set_deferred("disabled", true)
+		return
+	
+	isInvulnerable = true
+	await get_tree().create_timer(2.5).timeout
+	isInvulnerable = false
 	
 func start(pos):
+	currentHealthCount = maxHealthCount
+	isInvulnerable = false
 	position = pos
 	show()
 	$CollisionShape2D.disabled = false
@@ -66,6 +85,9 @@ func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
+	if velocity.length() < 200:
+		isLaunched = false
+		
 	if !isLaunched && !isCharging:
 		# Normalize vectors
 		var direction = input_dir.normalized() 
@@ -138,9 +160,13 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 			obstacle.die()
 			obstacle.died.connect(func(): isKillingEnemy = false, CONNECT_ONE_SHOT)
 			return
-		else:
-			velocity = Vector2.ZERO
-			return
+		elif velocity.length() < 200 && !isInvulnerable:
+			_hit()
+			
+			
+		#else:
+			#velocity = Vector2.ZERO
+			#return
 	
 	var reflect = collision.get_remainder().bounce(collision.get_normal())
 	## Calculate the bounce direction
@@ -187,7 +213,7 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 	#print("Successfully timed bounce on: ", obstacle.name)
 	
 	# If executed on an enemy, destory it here 
-	if obstacle.is_in_group("enemies"):
+	if obstacle.is_in_group("enemies") && isLaunched:
 		if velocity.length() >= killVelocityThreshold:
 			isKillingEnemy = true
 			obstacle.die()
