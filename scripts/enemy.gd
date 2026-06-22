@@ -3,6 +3,7 @@ const SPEED = 50
 var player: Node2D = null
 var isDying = false
 
+signal died
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var mob_types = Array($AnimatedSprite2D.sprite_frames.get_animation_names())
@@ -42,4 +43,5 @@ func die() -> void:
 	$CollisionShape2D.set_deferred("disabled", true)  # stop further collisions/bounces
 	
 	await get_tree().create_timer(0.5).timeout  # adjust delay as you like
+	died.emit()
 	queue_free()

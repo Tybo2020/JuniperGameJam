@@ -198,11 +198,13 @@ animation = &"idle"
 frame_progress = 0.5119748
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1215988259]
+visible = false
 position = Vector2(0, 3)
 scale = Vector2(1.255, 1.255)
 shape = SubResource("CircleShape2D_qixts")
 
 [node name="BounceDetector" parent="." unique_id=535892709 instance=ExtResource("2_qhqgy")]
+visible = false
 position = Vector2(-0.9999924, 4.7683716e-07)
 scale = Vector2(1.68, 1.68)
 collision_layer = 2

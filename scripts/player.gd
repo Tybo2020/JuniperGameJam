@@ -2,14 +2,16 @@ extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
 @export var lowChargeColor: Color = Color.YELLOW
 @export var highChargeColor: Color = Color.RED
+@export var healthCount: int = 3
 
 ###### Launch configuration #######
 @export var maxChargeTime: float = 1.0
-@export var maxLaunchPullback: float = 1000.0 # pixels away from inital POS
+@export var maxLaunchPullback: float = 350.0 # pixels away from inital POS
 @export var minLaunchStrength: float = 50.0
 @export var maxLaunchStrength: float = 1000.0 
 @export var launchDecay: float = 5
 @export var killVelocityThreshold: float = 800.0
+var isKillingEnemy: bool = false
 
 var isCharging: bool = false
 var isLaunched: bool = false
@@ -36,6 +38,9 @@ const SPEED = 100.0
 
 signal hit
 
+func _hit():
+	pass
+
 func _on_body_entered(_body):
 	hide() # Player disappears after being hit.
 	hit.emit()
@@ -61,7 +66,7 @@ func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
-	if !isLaunched:
+	if !isLaunched && !isCharging:
 		# Normalize vectors
 		var direction = input_dir.normalized() 
 		if direction:
@@ -70,7 +75,8 @@ func _physics_process(delta: float) -> void:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
 
 		
-	if isCharging:
+	if isCharging and !isLaunched:
+		velocity = Vector2.ZERO
 		var currentMousePos = get_local_mouse_position()
 		var distance = currentMousePos.distance_to(initialMousePos)
 		launchDirection = currentMousePos.direction_to(initialMousePos)
@@ -85,6 +91,10 @@ func _physics_process(delta: float) -> void:
 		handleBounce(collisionInfo)
 		
 	if isLaunched:
+		#if not isKillingEnemy:
+			## Do not decay velocity until after enemy is dead
+			#pass
+		#else:
 		# Natural decay every frame
 		velocity = velocity.move_toward(Vector2.ZERO, velocity.length() * (delta / launchDecay))
 
@@ -100,14 +110,14 @@ func _physics_process(delta: float) -> void:
 
 
 func _input(event):
-	if event.is_action_pressed("charge"):
+	if event.is_action_pressed("charge") and !isLaunched:
 		isCharging = true
 		initialMousePos = get_local_mouse_position()
 		#print("Charge key pressed")
 		#isCharging = true
 		#currentChargeTime = 0.0
 	
-	if event.is_action_released("charge") and isCharging:
+	if event.is_action_released("charge") and isCharging and !isLaunched:
 		isCharging = false
 		print("Charge released, launching")
 		executeLaunch()
@@ -124,7 +134,12 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 	
 	if obstacle.is_in_group("enemies"):
 		if velocity.length() >= killVelocityThreshold:
+			isKillingEnemy = true
 			obstacle.die()
+			obstacle.died.connect(func(): isKillingEnemy = false, CONNECT_ONE_SHOT)
+			return
+		else:
+			velocity = Vector2.ZERO
 			return
 	
 	var reflect = collision.get_remainder().bounce(collision.get_normal())
@@ -174,7 +189,9 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 	# If executed on an enemy, destory it here 
 	if obstacle.is_in_group("enemies"):
 		if velocity.length() >= killVelocityThreshold:
+			isKillingEnemy = true
 			obstacle.die()
+			obstacle.died.connect(func(): isKillingEnemy = false, CONNECT_ONE_SHOT)
 		else:
 			obstacle.die()
 	
