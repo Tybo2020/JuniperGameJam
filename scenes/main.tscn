@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" uid="uid://ib42tpjdna4j" path="res://scripts/main.gd" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://oa6aqeea0ujp" path="res://scenes/enemy.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://5jfa1nsagd7r" path="res://scenes/spawn_warning.tscn" id="2_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://c4mb6fm3ritku" path="res://scenes/player.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://bw1rb58xfbnm0" path="res://scenes/health_container.tscn" id="4_tbgi4"]
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
@@ -10,8 +12,23 @@ _data = {
 }
 point_count = 5
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qixts"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qixts"]
+size = Vector2(664, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6qh5s"]
+size = Vector2(8, 381)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_joibf"]
+size = Vector2(667, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5uimm"]
+size = Vector2(10, 368)
+
 [node name="Main" type="Node" unique_id=1844237773]
 script = ExtResource("1_o5qli")
+warning_scene = ExtResource("2_jyhfs")
 enemy_scene = ExtResource("2_0wfyh")
 
 [node name="Player" parent="." unique_id=110377226 groups=["player"] instance=ExtResource("3_sugp2")]
@@ -19,7 +36,6 @@ position = Vector2(64, 40)
 collision_mask = 6
 
 [node name="EnemyTimer" type="Timer" parent="." unique_id=85056071]
-wait_time = 0.5
 
 [node name="ScoreTimer" type="Timer" parent="." unique_id=1958995251]
 
@@ -38,7 +54,52 @@ position = Vector2(-96, -48)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=102011268]
 position = Vector2(56, 56)
-zoom = Vector2(1.21, 1.21)
+zoom = Vector2(1.745, 1.745)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=623614956]
+collision_layer = 4
+physics_material_override = SubResource("PhysicsMaterial_qixts")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=771858762]
+position = Vector2(54, 240)
+shape = SubResource("RectangleShape2D_qixts")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1381893430]
+collision_layer = 4
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=206553111]
+position = Vector2(384, 56)
+shape = SubResource("RectangleShape2D_6qh5s")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=1324504145]
+collision_layer = 4
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3" unique_id=2087875218]
+position = Vector2(53.5, -132.5)
+shape = SubResource("RectangleShape2D_joibf")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=1596437312]
+collision_layer = 4
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=34275873]
+position = Vector2(-275, 56)
+shape = SubResource("RectangleShape2D_5uimm")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=814086725]
+
+[node name="health_container" parent="CanvasLayer" unique_id=63299371 instance=ExtResource("4_tbgi4")]
+anchors_preset = -1
+anchor_left = 0.007
+anchor_top = 0.012
+anchor_right = 0.007
+anchor_bottom = 0.012
+offset_left = -0.06400013
+offset_top = 0.22399998
+offset_right = 39.936
+offset_bottom = 40.224
 
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]

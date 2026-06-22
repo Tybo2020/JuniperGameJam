@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://5jfa1nsagd7r"]
+
+[ext_resource type="Script" uid="uid://kkktsjlrd2u" path="res://scripts/spawn_warning.gd" id="1_m0c3r"]
+
+[node name="SpawnWarning" type="Node2D" unique_id=1377435187]
+script = ExtResource("1_m0c3r")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2143909689]
+offset_right = 24.0
+offset_bottom = 23.0
+color = Color(1, 0.26666668, 0.11764706, 1)
+
+[node name="Label" type="Label" parent="ColorRect" unique_id=864115664]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Timer" type="Timer" parent="." unique_id=2123193732]

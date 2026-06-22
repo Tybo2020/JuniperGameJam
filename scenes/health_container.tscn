@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bw1rb58xfbnm0"]
+
+[ext_resource type="Script" uid="uid://n6w144l40ex0" path="res://scripts/health_container.gd" id="1_qqaku"]
+
+[node name="health_container" type="HBoxContainer" unique_id=63299371]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 35
+script = ExtResource("1_qqaku")
