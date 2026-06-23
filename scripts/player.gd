@@ -146,7 +146,7 @@ func _physics_process(delta: float) -> void:
 				if velocity.x > 0:
 					playAnimation("slide_side", true) # Face Right
 				else:
-					playAnimation("slide_side", true) # Face Left (Mirrored)
+					playAnimation("slide_side", false) # Face Left (Mirrored)
 			else:
 				if velocity.y < 0:
 					playAnimation("slide_up")
@@ -189,8 +189,11 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 			obstacle.die()
 			obstacle.died.connect(func(): isKillingEnemy = false, CONNECT_ONE_SHOT)
 			return
+		elif velocity.length() > 200 && velocity.length() < killVelocityThreshold:
+			obstacle.hit()
 		elif velocity.length() < 200 && !isInvulnerable:
 			_hit()
+			
 			
 			
 		#else:
