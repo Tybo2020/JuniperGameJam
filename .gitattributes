@@ -1,2 +1,16 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Godot text files - force LF
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.gdshader text eol=lf
+*.uid text eol=lf
+
+# Binary files - never touch line endings
+*.png binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.import binary
