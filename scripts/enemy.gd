@@ -50,6 +50,7 @@ func die() -> void:
 	queue_free()
 
 func hit() -> void: 
+	print("Enemy Health", currentHealthCount)
 	if currentHealthCount < 1:
 		die()
 		return

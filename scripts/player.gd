@@ -57,7 +57,7 @@ func _hit() -> void:
 	hit.emit(currentHealthCount)
 	
 	if currentHealthCount <= 0:
-		hide()
+		#hide()
 		hit.emit()
 		$CollisionShape2D.set_deferred("disabled", true)
 		return
@@ -87,8 +87,8 @@ func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
-	if velocity.length() < 200:
-		isLaunched = false
+	#if velocity.length() < 200:
+		#isLaunched = false
 	
 	if !isLaunched && !isCharging:
 		# Normalize vectors
@@ -177,10 +177,6 @@ func _input(event):
 		triggerBounceWindow()
 		
 func handleBounce(collision: KinematicCollision2D) -> void:
-	bounces += 1
-	if bounces > maxBounces:
-		bounces = 0
-		return
 	var obstacle = collision.get_collider()
 	
 	if obstacle.is_in_group("enemies"):
@@ -193,8 +189,6 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 			obstacle.hit()
 		elif velocity.length() < 200 && !isInvulnerable:
 			_hit()
-			
-			
 			
 		#else:
 			#velocity = Vector2.ZERO
