@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dugm26wenoq8s"]
+
+[ext_resource type="Script" uid="uid://uxuko18uyr1l" path="res://scripts/upgrade_manager.gd" id="1_1d1rf"]
+
+[node name="card_container" type="HBoxContainer" unique_id=355849217]
+anchors_preset = -1
+anchor_left = 0.268
+anchor_top = 0.42400002
+anchor_right = 0.268
+anchor_bottom = 0.42400002
+offset_left = -46.871033
+offset_top = 0.24798584
+offset_right = 653.12897
+offset_bottom = 40.247986
+theme_override_constants/separation = 350
+script = ExtResource("1_1d1rf")

@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://ib42tpjdna4j" path="res://scripts/main.gd" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://oa6aqeea0ujp" path="res://scenes/enemy.tscn" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://5jfa1nsagd7r" path="res://scenes/spawn_warning.tscn" id="2_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://5jfa1nsagd7r" path="res://scenes/UI/spawn_warning.tscn" id="2_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://c4mb6fm3ritku" path="res://scenes/player.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bw1rb58xfbnm0" path="res://scenes/health_container.tscn" id="4_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://bw1rb58xfbnm0" path="res://scenes/UI/health_container.tscn" id="4_tbgi4"]
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
