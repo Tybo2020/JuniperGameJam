@@ -1,5 +1,7 @@
 extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
+@onready var animatedSprite: AnimatedSprite2D = $AnimatedSprite2D
+var currentAnimation: String = ""
 @export var lowChargeColor: Color = Color.YELLOW
 @export var highChargeColor: Color = Color.RED
 @export var maxHealthCount: int = 3
@@ -87,15 +89,30 @@ func _physics_process(delta: float) -> void:
 	
 	if velocity.length() < 200:
 		isLaunched = false
-		
+	
 	if !isLaunched && !isCharging:
 		# Normalize vectors
 		var direction = input_dir.normalized() 
+		
+		######## Play animations 
+		# Compare absolute values to see if moving more horizontally or vertically
+		if abs(velocity.x) > abs(velocity.y):
+			if velocity.x > 0:
+				playAnimation("walk_side", true) # Face Right
+			else:
+				playAnimation("walk_side", false) # Face Left (Mirrored)
+		else:
+			if velocity.y < 0:
+				playAnimation("walk_up")    
+			else:
+				playAnimation("walk_down")   
+		
+		# Apply movement 
 		if direction:
 			velocity = direction * SPEED
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
-
+			playAnimation("idle")
 		
 	if isCharging and !isLaunched:
 		velocity = Vector2.ZERO
@@ -118,11 +135,23 @@ func _physics_process(delta: float) -> void:
 			#pass
 		#else:
 		# Natural decay every frame
+		playAnimation("spin")
 		velocity = velocity.move_toward(Vector2.ZERO, velocity.length() * (delta / launchDecay))
 
 		# Hold "halt" to brake faster
 		if Input.is_action_pressed("halt"):
 			velocity = velocity.move_toward(Vector2.ZERO, HALT_SPEED * delta)
+			##### Slide Animations 
+			if abs(velocity.x) > abs(velocity.y):
+				if velocity.x > 0:
+					playAnimation("slide_side", true) # Face Right
+				else:
+					playAnimation("slide_side", true) # Face Left (Mirrored)
+			else:
+				if velocity.y < 0:
+					playAnimation("slide_up")
+				else:
+					playAnimation("slide_down")
 
 		# Clear launched state once basically stopped
 		if velocity.length_squared() < 5.0:
@@ -236,3 +265,10 @@ func update_aim_line() -> void:
 	aim_line.visible = true
 	aim_line.points = [Vector2.ZERO, launchDirection * chargeRatio * maxLaunchPullback]
 	aim_line.default_color = lowChargeColor.lerp(highChargeColor, chargeRatio)
+
+# Check if an animation is currently playing, prevents restarting the same anim each frame
+func playAnimation(anim: String, flipH: bool = false) -> void:
+	if currentAnimation != anim:
+		currentAnimation = anim
+		animatedSprite.flip_h = flipH
+		animatedSprite.play(anim)
