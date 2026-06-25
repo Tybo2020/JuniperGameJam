@@ -115,6 +115,7 @@ func _physics_process(delta: float) -> void:
 			playAnimation("idle")
 		
 	if isCharging and !isLaunched:
+		playAnimation("charge")
 		velocity = Vector2.ZERO
 		var currentMousePos = get_local_mouse_position()
 		var distance = currentMousePos.distance_to(initialMousePos)
@@ -188,7 +189,8 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 		elif velocity.length() > 200 && velocity.length() < killVelocityThreshold:
 			obstacle.hit()
 		elif velocity.length() < 200 && !isInvulnerable:
-			_hit()
+			#_hit()
+			pass
 			
 		#else:
 			#velocity = Vector2.ZERO

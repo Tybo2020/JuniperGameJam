@@ -8,7 +8,7 @@
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, -96, -48, 0, 0, 0, 0, 312, -48, 0, 0, 0, 0, 312, 216, 0, 0, 0, 0, -96, 216, 0, 0, 0, 0, -96, -48)
+"points": PackedVector2Array(0, 0, 0, 0, -128, -48, 0, 0, 0, 0, 240, -48, 0, 0, 0, 0, 240, 160, 0, 0, 0, 0, -128, 160, 0, 0, 0, 0, -128, -48)
 }
 point_count = 5
 
@@ -33,7 +33,6 @@ enemy_scene = ExtResource("2_0wfyh")
 
 [node name="Player" parent="." unique_id=110377226 groups=["player"] instance=ExtResource("3_sugp2")]
 position = Vector2(64, 40)
-collision_mask = 6
 
 [node name="EnemyTimer" type="Timer" parent="." unique_id=85056071]
 
@@ -50,7 +49,7 @@ position = Vector2(54, 85)
 curve = SubResource("Curve2D_sgp6g")
 
 [node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath" unique_id=1819592132]
-position = Vector2(-96, -48)
+position = Vector2(-128, -48)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=102011268]
 position = Vector2(56, 56)
@@ -61,7 +60,7 @@ collision_layer = 4
 physics_material_override = SubResource("PhysicsMaterial_qixts")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=771858762]
-position = Vector2(54, 240)
+position = Vector2(64, 160)
 shape = SubResource("RectangleShape2D_qixts")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1381893430]
@@ -69,7 +68,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=206553111]
-position = Vector2(384, 56)
+position = Vector2(240, 56)
 shape = SubResource("RectangleShape2D_6qh5s")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=1324504145]
@@ -77,7 +76,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3" unique_id=2087875218]
-position = Vector2(53.5, -132.5)
+position = Vector2(63, -48)
 shape = SubResource("RectangleShape2D_joibf")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=1596437312]
@@ -85,7 +84,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=34275873]
-position = Vector2(-275, 56)
+position = Vector2(-128, 56)
 shape = SubResource("RectangleShape2D_5uimm")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=814086725]
