@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://5jfa1nsagd7r" path="res://scenes/UI/spawn_warning.tscn" id="2_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://c4mb6fm3ritku" path="res://scenes/player.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bw1rb58xfbnm0" path="res://scenes/UI/health_container.tscn" id="4_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://155fmndw22oa" path="res://scenes/UI/combo_sprite.tscn" id="5_tefeu"]
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
@@ -60,7 +61,7 @@ collision_layer = 4
 physics_material_override = SubResource("PhysicsMaterial_qixts")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=771858762]
-position = Vector2(64, 160)
+position = Vector2(63, 168)
 shape = SubResource("RectangleShape2D_qixts")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1381893430]
@@ -68,7 +69,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=206553111]
-position = Vector2(240, 56)
+position = Vector2(248, 56)
 shape = SubResource("RectangleShape2D_6qh5s")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="." unique_id=1324504145]
@@ -76,7 +77,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3" unique_id=2087875218]
-position = Vector2(63, -48)
+position = Vector2(64, -56)
 shape = SubResource("RectangleShape2D_joibf")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="." unique_id=1596437312]
@@ -84,7 +85,7 @@ collision_layer = 4
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4" unique_id=34275873]
-position = Vector2(-128, 56)
+position = Vector2(-136, 56)
 shape = SubResource("RectangleShape2D_5uimm")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=814086725]
@@ -99,6 +100,10 @@ offset_left = -0.06400013
 offset_top = 0.22399998
 offset_right = 39.936
 offset_bottom = 40.224
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1956243767]
+
+[node name="combo_sprite" parent="CanvasLayer2" unique_id=1983284545 instance=ExtResource("5_tefeu")]
 
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]

@@ -10,9 +10,13 @@ func _ready() -> void:
 	# create upgrades 
 	allPerks = [
 		create_upgrade("Extra Health", "Increase max heart count by 1", 1, "sprite path" ),
+		create_upgrade("Restoration", "Recover 1 heart", 1, "path"),
 		create_upgrade("Combo Limit", "Increase max combo limit by 1 (Each combo increases 
-						spin velocity 20%)", 1, "sprite path"),
-		create_upgrade("Longer Deflect Window", "Increase perfect bounce timing window", 0.1, "sprite path")
+						spin velocity by 20%)", 1, "sprite path"),
+		create_upgrade("Combo Upgrade", "Increase combo scaling by an additional 5%", 0.05, "path"),
+		create_upgrade("Longer Deflect Window", "Increase perfect bounce timing window", 0.1, "sprite path"),
+		create_upgrade("Haste", "Decrease charge time", 1, "path"),
+		create_upgrade("Dash attack", "Unlocks the dash attack skill", 1, "path")
 						
 	]
 

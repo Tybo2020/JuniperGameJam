@@ -1,6 +1,7 @@
 # Adapted from Godot's First 2D Game tutorial
 extends Node
 @onready var heartsContainer = $CanvasLayer/health_container
+@onready var comboSprite = $CanvasLayer2/combo_sprite
 @export var warning_scene: PackedScene 
 @export var enemy_scene: PackedScene
 @export var maxEnemyCount: int = 5
@@ -13,6 +14,7 @@ var killCount: int = 0
 func _ready() -> void:
 	new_game()
 	$Player.hit.connect(heartsContainer.updateHearts)
+	$Player.deflect.connect(comboSprite.update)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
