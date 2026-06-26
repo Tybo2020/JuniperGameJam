@@ -6,7 +6,12 @@ extends HBoxContainer
 func _ready() -> void:
 	pass # Replace with function body.
 
-func setMaxHearts(hearts: int):
+func setMaxHearts(hearts: int) -> void:
+	for heart in get_children():
+		heart.queue_free()
+	
+	await get_tree().process_frame  # wait for old hearts to be removed
+	
 	for i in range(hearts):
 		var heart = HeartGuiClass.instantiate()
 		add_child(heart)

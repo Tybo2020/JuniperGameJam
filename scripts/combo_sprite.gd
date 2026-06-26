@@ -7,4 +7,7 @@ func _ready() -> void:
 
 
 func update(comboCount: int):
+	if comboCount > 5:
+		sprite.frame = 5
+		return
 	sprite.frame = comboCount

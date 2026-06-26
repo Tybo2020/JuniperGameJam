@@ -41,8 +41,12 @@ func _on_lever_hitbox_gui_input(event: InputEvent) -> void:
 		_on_clicked()
 
 func _on_upgrade_chosen() -> void:
+	cardContainer.clear_cards()
 	hide()
 	hasBeenPulled = false
+	# Disable input on all cards
+	for card in cardContainer.get_children():
+		card.set_process_input(false)
 
 func _on_card_hovered(description: String) -> void:
 	descriptionLabel.text = description

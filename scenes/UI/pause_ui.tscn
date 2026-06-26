@@ -1,7 +1,12 @@
 [gd_scene format=3 uid="uid://xy3ocrt2rng0"]
 
-[ext_resource type="Texture2D" uid="uid://b12m6y85qxt2s" path="res://icon.svg" id="1_si5h2"]
+[ext_resource type="Script" uid="uid://cd65e2ugag6f2" path="res://scenes/UI/pause_ui.gd" id="1_o2sb4"]
+[ext_resource type="Texture2D" uid="uid://djebxrnn6fnvi" path="res://assets/perks/HEALTHUPGRADE.png" id="2_jg8yc"]
 [ext_resource type="FontFile" uid="uid://bx7fnneuwlchl" path="res://assets/fonts/Abaddon Bold.ttf" id="2_o2sb4"]
+[ext_resource type="Texture2D" uid="uid://bxun8sf7pboiv" path="res://assets/perks/combolimit.png" id="4_y8qm2"]
+[ext_resource type="Texture2D" uid="uid://oj2cpuw0xinh" path="res://assets/perks/Scythe_upgrade.png" id="5_pugri"]
+[ext_resource type="Texture2D" uid="uid://lavo0lvfr85y" path="res://assets/perks/reboundupgrade.png" id="6_fif1k"]
+[ext_resource type="Texture2D" uid="uid://drk8ap6sqxwbh" path="res://assets/perks/stopwatch_haste.png" id="7_1xe8l"]
 
 [node name="Control" type="Control" unique_id=1865084720]
 layout_mode = 3
@@ -10,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_o2sb4")
 
 [node name="Panel" type="Panel" parent="." unique_id=1522811961]
 self_modulate = Color(1, 1, 1, 0.42745098)
@@ -19,9 +25,11 @@ offset_right = 639.0
 offset_bottom = 359.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=215824652]
-position = Vector2(109.99999, 124)
-scale = Vector2(0.26562503, 0.2597657)
-texture = ExtResource("1_si5h2")
+position = Vector2(166.69998, 76.228)
+scale = Vector2(0.576, 0.564)
+texture = ExtResource("2_jg8yc")
+vframes = 2
+frame = 1
 
 [node name="StatName" type="Label" parent="Sprite2D" unique_id=225766383]
 offset_left = 94.11768
@@ -31,9 +39,61 @@ offset_bottom = 32.052628
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_o2sb4")
 theme_override_font_sizes/font_size = 52
-text = "MAX VELOCITY"
+metadata/_edit_use_anchors_ = true
 
 [node name="Value" type="Label" parent="Sprite2D" unique_id=1681425477]
+offset_left = 445.0764
+offset_top = -30.546093
+offset_right = 768.84094
+offset_bottom = 28.453907
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=528732554]
+position = Vector2(166.69998, 130.228)
+scale = Vector2(0.549, 0.537)
+texture = ExtResource("4_y8qm2")
+vframes = 2
+frame = 1
+
+[node name="StatName" type="Label" parent="Sprite2D2" unique_id=847205934]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
+[node name="Value" type="Label" parent="Sprite2D2" unique_id=1494439624]
+offset_left = 468.6703
+offset_top = -30.918053
+offset_right = 792.43494
+offset_bottom = 28.081947
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=89150591]
+position = Vector2(166.69998, 190.228)
+scale = Vector2(0.54, 0.533)
+texture = ExtResource("5_pugri")
+
+[node name="StatName" type="Label" parent="Sprite2D3" unique_id=348821231]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
+[node name="Value" type="Label" parent="Sprite2D3" unique_id=617902376]
 offset_left = 478.1176
 offset_top = -30.796991
 offset_right = 801.88226
@@ -41,55 +101,63 @@ offset_bottom = 28.203009
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_o2sb4")
 theme_override_font_sizes/font_size = 52
-text = "MAX VELOCITY"
+metadata/_edit_use_anchors_ = true
 
-[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=537732294]
-position = Vector2(109, 189)
-scale = Vector2(0.26462507, 0.26281244)
-texture = ExtResource("1_si5h2")
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=823235890]
+position = Vector2(166.7, 244.22798)
+scale = Vector2(0.54, 0.525)
+texture = ExtResource("6_fif1k")
 
-[node name="StatName" type="Label" parent="Sprite2D2" unique_id=674936406]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
+[node name="StatName" type="Label" parent="Sprite2D4" unique_id=105836878]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
 
-[node name="Value" type="Label" parent="Sprite2D2" unique_id=673339351]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
+[node name="Value" type="Label" parent="Sprite2D4" unique_id=482317606]
+offset_left = 478.1176
+offset_top = -30.796991
+offset_right = 801.88226
+offset_bottom = 28.203009
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
 
-[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=1855147721]
-position = Vector2(107, 250.00002)
-scale = Vector2(0.26462507, 0.26281244)
-texture = ExtResource("1_si5h2")
+[node name="Sprite2D5" type="Sprite2D" parent="." unique_id=1507846394]
+position = Vector2(166.69998, 307.22803)
+scale = Vector2(0.571, 0.564)
+texture = ExtResource("7_1xe8l")
 
-[node name="StatName" type="Label" parent="Sprite2D3" unique_id=312037887]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
+[node name="StatName" type="Label" parent="Sprite2D5" unique_id=1870911658]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
 
-[node name="Value" type="Label" parent="Sprite2D3" unique_id=2022482299]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
+[node name="Value" type="Label" parent="Sprite2D5" unique_id=1647168390]
+offset_left = 448.86166
+offset_top = -32.98403
+offset_right = 772.62634
+offset_bottom = 26.015968
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
 
-[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1722826162]
-position = Vector2(108, 311)
-scale = Vector2(0.26462507, 0.26281244)
-texture = ExtResource("1_si5h2")
-
-[node name="StatName" type="Label" parent="Sprite2D4" unique_id=1480490880]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
-
-[node name="Value" type="Label" parent="Sprite2D4" unique_id=2074239491]
-offset_left = 112.90323
-offset_top = -57.692307
-offset_right = 560.9032
-offset_bottom = 57.79634
+[node name="StageLabel" type="Label" parent="." unique_id=2091847255]
+layout_mode = 0
+offset_left = 218.0
+offset_top = 13.0
+offset_right = 541.0
+offset_bottom = 85.0
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 33

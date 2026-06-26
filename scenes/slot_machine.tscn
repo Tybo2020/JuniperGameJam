@@ -332,6 +332,13 @@ scale = Vector2(0.72, 0.72)
 transform = Transform2D(0.72, 0, 0, 0.72, 0, 0)
 script = ExtResource("1_xjw1r")
 
+[node name="Background_dim" type="ColorRect" parent="." unique_id=44193965]
+z_index = -1
+offset_right = 888.8889
+offset_bottom = 500.00003
+mouse_filter = 2
+color = Color(0, 0, 0, 0.26666668)
+
 [node name="slot_machine_sprite" type="AnimatedSprite2D" parent="." unique_id=120682619]
 position = Vector2(383.3333, 266.66666)
 scale = Vector2(1.2, 1.2)

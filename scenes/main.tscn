@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://d0pej038ethgg" path="res://scenes/slot_machine.tscn" id="7_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://b16gk8t4ujtxx" path="res://assets/stone_ruin_floor_FINAL.png" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://bf1kulou3w05a" path="res://scenes/bgm_ost.tscn" id="9_85g3d"]
+[ext_resource type="PackedScene" uid="uid://xy3ocrt2rng0" path="res://scenes/UI/pause_ui.tscn" id="10_choun"]
 
 [sub_resource type="Curve2D" id="Curve2D_sgp6g"]
 _data = {
@@ -31,6 +32,7 @@ size = Vector2(677.5, 12.5)
 size = Vector2(13, 392)
 
 [node name="Main" type="Node" unique_id=1844237773]
+process_mode = 3
 script = ExtResource("1_o5qli")
 warning_scene = ExtResource("2_jyhfs")
 enemy_scene = ExtResource("2_0wfyh")
@@ -39,10 +41,13 @@ enemy_scene = ExtResource("2_0wfyh")
 position = Vector2(64, 40)
 
 [node name="EnemyTimer" type="Timer" parent="." unique_id=85056071]
+process_mode = 1
 
 [node name="ScoreTimer" type="Timer" parent="." unique_id=1958995251]
+process_mode = 1
 
 [node name="StartTimer" type="Timer" parent="." unique_id=1772854286]
+process_mode = 1
 wait_time = 2.0
 one_shot = true
 
@@ -114,6 +119,12 @@ scale = Vector2(1.0500001, 1.0500001)
 texture = ExtResource("8_tipki")
 
 [node name="AudioStreamPlayer" parent="." unique_id=650511772 instance=ExtResource("9_85g3d")]
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1370441244]
+process_mode = 3
+
+[node name="stats_panel" parent="CanvasLayer2" unique_id=1865084720 instance=ExtResource("10_choun")]
+process_mode = 3
 
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]

@@ -6,19 +6,22 @@ var currentAnimation: String = ""
 
 @export var lowChargeColor: Color = Color.YELLOW
 @export var highChargeColor: Color = Color.RED
-
-@export var maxHealthCount: int = 3
 var currentHealthCount: int = 0
 
-####### Combo Configuration ######## 
+####### Upgrade Variables ########
+@export var maxHealthCount: int = 3
 var maxComboCount: int = 5
+@export var comboVelocityMultiplier: float = 1.2
+@export var bounceWindowDuration: float = 0.4 # 24 frames at 60fps
+@export var maxChargeTime: float = 2.0
+
+####### Combo Configuration ######## 
 var comboCounter: int = 0
 @export var comboDecayTime: float = 2.0
 var comboDecayTimer = null
 var maxComboVelocity: Vector2 = Vector2.ZERO
 
 ###### Launch configuration #######
-@export var maxChargeTime: float = 1.0
 @export var maxLaunchPullback: float = 350.0 # pixels away from inital POS
 @export var minLaunchStrength: float = 50.0
 @export var maxLaunchStrength: float = 1000.0 
@@ -38,7 +41,6 @@ var launchDirection: Vector2 = Vector2.ZERO
 ###### Bounce Configuration #######
 @onready var bounceDetector: Area2D = $BounceDetector
 @export var maxBounces: int = 3
-@export var bounceWindowDuration: float = 0.4 # 24 frames at 60fps
 @export var bounceCooldown: float = 0.4
 
 var bounces: int = 0
@@ -50,6 +52,8 @@ const SPEED = 100.0
 
 signal hit
 signal deflect
+signal healed(currentHealth: int)
+signal max_health_changed(newMax: int)
 
 var isInvulnerable: bool = false
 
@@ -79,7 +83,7 @@ func _hit() -> void:
 func _deflect() -> void:
 	if comboCounter < maxComboCount:
 		comboCounter += 1
-		velocity *= 1.3
+		velocity *= comboVelocityMultiplier
 		
 		# Capture velocity the moment max combo is reached
 		if comboCounter == maxComboCount:
@@ -128,6 +132,8 @@ func _on_bounce_detector_body_entered(body: Node2D) -> void:
 		executeSuccessfulBounce(body, null)
 
 func _physics_process(delta: float) -> void:
+	if get_tree().paused:
+		return
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
@@ -207,6 +213,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _input(event):
+	if get_tree().paused:
+		return
 	if event.is_action_pressed("charge") and !isLaunched:
 		isCharging = true
 		initialMousePos = get_local_mouse_position()

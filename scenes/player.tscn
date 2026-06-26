@@ -494,7 +494,6 @@ scale = Vector2(1.255, 1.255)
 shape = SubResource("CircleShape2D_qixts")
 
 [node name="BounceDetector" parent="." unique_id=535892709 instance=ExtResource("2_qhqgy")]
-visible = false
 position = Vector2(-0.9999924, 4.7683716e-07)
 scale = Vector2(1.68, 1.68)
 collision_layer = 2

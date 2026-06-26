@@ -33,8 +33,9 @@ func setup(data: UpgradeData) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		var mouse_pos = get_viewport().get_mouse_position()
-		if get_global_rect().has_point(mouse_pos):
+		var local_mouse = get_local_mouse_position()
+		var card_rect = Rect2(Vector2.ZERO, size)
+		if card_rect.has_point(local_mouse):
 			_on_clicked()
 
 func _on_clicked() -> void:

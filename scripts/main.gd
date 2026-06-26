@@ -3,6 +3,8 @@ extends Node
 @onready var heartsContainer = $CanvasLayer/health_container
 @onready var comboSprite = $combo_sprite
 @onready var slotMachineSprite = $SlotMachine/slot_machine_sprite
+@onready var statsPanel = $CanvasLayer2/stats_panel
+
 @export var warning_scene: PackedScene 
 @export var enemy_scene: PackedScene
 @export var maxEnemyCount: int = 5
@@ -11,10 +13,24 @@ var score
 var currentWave: int = 0
 var killCount: int = 0
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		print("Pause pressed, visible: ", statsPanel.visible)
+		statsPanel.toggleVisibility($Player, currentWave)
+	elif event.is_action_pressed("ui_cancel"):
+		print("Escape pressed, visible: ", statsPanel.visible)
+		if statsPanel.visible:
+			statsPanel.hide()
+			get_tree().paused = false
+			
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	new_game()
 	$Player.hit.connect(heartsContainer.updateHearts)
+	$Player.healed.connect(heartsContainer.updateHearts)
+	$Player.max_health_changed.connect(func(newMax):
+		await heartsContainer.setMaxHearts(newMax)
+		heartsContainer.updateHearts($Player.currentHealthCount))
 	$Player.deflect.connect(comboSprite.update)
 	$SlotMachine.hide()
 
@@ -61,7 +77,7 @@ func _on_enemy_timer_timeout():
 	warning.setup(spawn_position, 2.0)
 	
 	# Wait for warning timer, pause enemy timer
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, true).timeout
 	
 	# Set the enemy to a random location 
 	enemy.position = spawn_position
@@ -92,6 +108,8 @@ func _on_enemy_died() -> void:
 		end_wave()
 
 func start_next_wave() -> void:
+	# Update hearts UI in case max health changed from upgrade
+	heartsContainer.updateHearts($Player.currentHealthCount)
 	currentWave += 1
 	currentEnemyCount = 0
 	killCount = 0
@@ -105,12 +123,13 @@ func end_wave() -> void:
 	$ScoreTimer.stop()
 	$EnemyTimer.stop()
 	$SlotMachine.show()
-	$SlotMachine.spin_finished.connect(_on_spin_finished, CONNECT_ONE_SHOT)
+	if not $SlotMachine.spin_finished.is_connected(_on_spin_finished):
+		$SlotMachine.spin_finished.connect(_on_spin_finished, CONNECT_ONE_SHOT)
 
 func _on_spin_finished() -> void:
-	# Wait for player to choose upgrade before starting next wave
-	$SlotMachine/card_container.upgrade_chosen.connect(_on_upgrade_chosen, CONNECT_ONE_SHOT)
+	var card_container = $SlotMachine/card_container
+	if not card_container.upgrade_chosen.is_connected(_on_upgrade_chosen):
+		card_container.upgrade_chosen.connect(_on_upgrade_chosen, CONNECT_ONE_SHOT)
 
 func _on_upgrade_chosen() -> void:
 	start_next_wave()
-	

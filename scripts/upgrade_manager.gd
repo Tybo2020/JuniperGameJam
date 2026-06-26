@@ -21,7 +21,7 @@ func _ready() -> void:
 	allPerks = [
 		create_upgrade("Health Upgrade", "Increase max heart count by 1", 1, healthUpgradeTexture),
 		create_upgrade("Health Potion", "Recover 1 heart", 1, healthPotionTexture),
-		create_upgrade("Combo Limit Break", "Increase max combo limit by 1. Each combo increases spin velocity by 20%", 1, comboLimitTexture),
+		create_upgrade("Combo Limit", "Increase max combo limit by 1. Each combo increases spin velocity by 20%", 1, comboLimitTexture),
 		create_upgrade("Scythe Upgrade", "Increase combo scaling by an additional 5%", 0.05, scytheUpgradeTexture),
 		create_upgrade("Rebound Upgrade", "Increase perfect rebound timing window", 0.1, reboundUpgradeTexture),
 		create_upgrade("Haste", "Decrease charge time", 1, hasteTexture),
@@ -29,13 +29,43 @@ func _ready() -> void:
 	]
 
 func _on_upgrade_selected(upgrade_data: UpgradeData) -> void:
+	# Disable all cards immediately to prevent double selection
+	for card in get_children():
+		card.set_process_input(false)
 	applyUpgrade(upgrade_data)
-	
-	# Notify slot machine the choice is made
 	upgrade_chosen.emit()
 
 func applyUpgrade(upgrade_data: UpgradeData) -> void:
 	print("Success! Chosen Upgrade: ", upgrade_data.name)
+	var player = get_tree().get_first_node_in_group("player")
+	if player == null:
+		return
+	
+	match upgrade_data.name:
+		"Health Upgrade":
+			player.maxHealthCount += int(upgrade_data.value)
+			# notify UI to update heart display
+			player.max_health_changed.emit(player.maxHealthCount)
+			
+			print("Max Health: ", player.maxHealthCount)
+		"Health Potion":
+			player.currentHealthCount = min(player.currentHealthCount + 1, player.maxHealthCount)
+			player.healed.emit(player.currentHealthCount)
+			
+			print("Current Health: ", player.currentHealthCount)
+		"Combo Limit":
+			player.maxComboCount += int(upgrade_data.value)
+			print("Max Combo: ", player.maxComboCount)
+		"Scythe Upgrade":
+			# velocity multiplier in _deflect is 1.3, increase by 5%
+			player.comboVelocityMultiplier += upgrade_data.value
+			print("Combo Velocity Multiplier: ", player.comboVelocityMultiplier)
+		"Rebound Upgrade":
+			player.bounceWindowDuration += upgrade_data.value
+			print("Bounce Window Duration: ", player.bounceWindowDuration)
+		"Haste":
+			# player.maxLaunchPullback -= upgrade_data.value * 50
+			pass
 	
 
 func displayNewUpgrades() -> void:
@@ -51,6 +81,7 @@ func displayNewUpgrades() -> void:
 		card.card_hovered.connect(_on_card_hovered)
 		card.card_unhovered.connect(_on_card_unhovered)
 		add_child(card)
+		card.set_process_input(true)
 		var perk = getRandomPerk()
 		while perk in usedPerks:
 			perk = getRandomPerk()
@@ -74,3 +105,7 @@ func _on_card_hovered(description: String) -> void:
 
 func _on_card_unhovered() -> void:
 	hide_description.emit()
+
+func clear_cards() -> void:
+	for card in get_children():
+		card.queue_free()
