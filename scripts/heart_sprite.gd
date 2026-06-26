@@ -13,4 +13,4 @@ func _process(delta: float) -> void:
 
 func update(isFull: bool):
 	if isFull: sprite.frame = 0
-	else: sprite.frame = 4
+	else: sprite.frame = 1

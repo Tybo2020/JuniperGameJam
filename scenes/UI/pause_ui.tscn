@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://xy3ocrt2rng0"]
+
+[ext_resource type="Texture2D" uid="uid://b12m6y85qxt2s" path="res://icon.svg" id="1_si5h2"]
+[ext_resource type="FontFile" uid="uid://bx7fnneuwlchl" path="res://assets/fonts/Abaddon Bold.ttf" id="2_o2sb4"]
+
+[node name="Control" type="Control" unique_id=1865084720]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=1522811961]
+self_modulate = Color(1, 1, 1, 0.42745098)
+z_index = -1
+layout_mode = 0
+offset_right = 639.0
+offset_bottom = 359.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=215824652]
+position = Vector2(109.99999, 124)
+scale = Vector2(0.26562503, 0.2597657)
+texture = ExtResource("1_si5h2")
+
+[node name="StatName" type="Label" parent="Sprite2D" unique_id=225766383]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+text = "MAX VELOCITY"
+
+[node name="Value" type="Label" parent="Sprite2D" unique_id=1681425477]
+offset_left = 478.1176
+offset_top = -30.796991
+offset_right = 801.88226
+offset_bottom = 28.203009
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+text = "MAX VELOCITY"
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=537732294]
+position = Vector2(109, 189)
+scale = Vector2(0.26462507, 0.26281244)
+texture = ExtResource("1_si5h2")
+
+[node name="StatName" type="Label" parent="Sprite2D2" unique_id=674936406]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634
+
+[node name="Value" type="Label" parent="Sprite2D2" unique_id=673339351]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=1855147721]
+position = Vector2(107, 250.00002)
+scale = Vector2(0.26462507, 0.26281244)
+texture = ExtResource("1_si5h2")
+
+[node name="StatName" type="Label" parent="Sprite2D3" unique_id=312037887]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634
+
+[node name="Value" type="Label" parent="Sprite2D3" unique_id=2022482299]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1722826162]
+position = Vector2(108, 311)
+scale = Vector2(0.26462507, 0.26281244)
+texture = ExtResource("1_si5h2")
+
+[node name="StatName" type="Label" parent="Sprite2D4" unique_id=1480490880]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634
+
+[node name="Value" type="Label" parent="Sprite2D4" unique_id=2074239491]
+offset_left = 112.90323
+offset_top = -57.692307
+offset_right = 560.9032
+offset_bottom = 57.79634

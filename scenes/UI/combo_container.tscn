@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dwrky0rcxppr3"]
+
+[ext_resource type="Texture2D" uid="uid://b12m6y85qxt2s" path="res://icon.svg" id="1_4hcsf"]
+
+[node name="combo_indicator" type="Panel" unique_id=223794700]
+offset_top = 48.0
+offset_right = 40.0
+offset_bottom = 88.0
+
+[node name="Combo" type="Sprite2D" parent="." unique_id=1736903828]
+position = Vector2(20, 20)
+scale = Vector2(0.3125, 0.3125)
+texture = ExtResource("1_4hcsf")

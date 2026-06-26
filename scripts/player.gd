@@ -1,11 +1,21 @@
 extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
 @onready var animatedSprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var shieldSprite: AnimatedSprite2D = $shieldSprite
 var currentAnimation: String = ""
+
 @export var lowChargeColor: Color = Color.YELLOW
 @export var highChargeColor: Color = Color.RED
+
 @export var maxHealthCount: int = 3
 var currentHealthCount: int = 0
+
+####### Combo Configuration ######## 
+var maxComboCount: int = 5
+var comboCounter: int = 0
+@export var comboDecayTime: float = 2.0
+var comboDecayTimer = null
+var maxComboVelocity: Vector2 = Vector2.ZERO
 
 ###### Launch configuration #######
 @export var maxChargeTime: float = 1.0
@@ -34,12 +44,12 @@ var launchDirection: Vector2 = Vector2.ZERO
 var bounces: int = 0
 var isBouncing: bool = false
 var canBounce: bool = true
-var comboCounter: int = 0
 
 const HALT_SPEED = 1000
 const SPEED = 100.0
 
 signal hit
+signal deflect
 
 var isInvulnerable: bool = false
 
@@ -66,13 +76,47 @@ func _hit() -> void:
 	await get_tree().create_timer(2.5).timeout
 	isInvulnerable = false
 	
+func _deflect() -> void:
+	if comboCounter < maxComboCount:
+		comboCounter += 1
+		velocity *= 1.3
+		
+		# Capture velocity the moment max combo is reached
+		if comboCounter == maxComboCount:
+			maxComboVelocity = velocity
+	else:
+		# Already at max, restore to saved max 
+		velocity = maxComboVelocity
+	
+	deflect.emit(comboCounter)
+	_resetComboDecayTimer()
+
+func _resetComboDecayTimer() -> void:
+	# Cancel existing timer if one is running
+	if comboDecayTimer != null:
+		comboDecayTimer.timeout.disconnect(_on_combo_decay)
+	
+	# Start a fresh timer
+	comboDecayTimer = get_tree().create_timer(comboDecayTime)
+	comboDecayTimer.timeout.connect(_on_combo_decay)
+
+func _on_combo_decay() -> void:
+	comboCounter = 0
+	maxComboVelocity = Vector2.ZERO
+	comboDecayTimer = null
+	
+	# Notify Ui to reset combo counter
+	deflect.emit(comboCounter)
+	
 func start(pos):
 	currentHealthCount = maxHealthCount
 	isInvulnerable = false
+	comboCounter = 0
+	comboDecayTimer = null
 	position = pos
 	show()
 	$CollisionShape2D.disabled = false
-	
+
 func _ready() -> void:
 	hide()
 	# Connect signal so it triggers if an object enters while pressing bounce key
@@ -127,6 +171,7 @@ func _physics_process(delta: float) -> void:
 	var collisionInfo = move_and_collide(velocity * delta)
 	if collisionInfo and isBouncing:
 		executeSuccessfulBounce(collisionInfo.get_collider(), collisionInfo)
+		_deflect()
 	elif collisionInfo:
 		handleBounce(collisionInfo)
 		
@@ -175,7 +220,13 @@ func _input(event):
 		executeLaunch()
 	
 	if event.is_action_pressed("bounce") and canBounce:
+		shieldSprite.show()
+		shieldSprite.play("rebound")
 		triggerBounceWindow()
+		
+		await shieldSprite.animation_finished
+		shieldSprite.hide()
+		
 		
 func handleBounce(collision: KinematicCollision2D) -> void:
 	var obstacle = collision.get_collider()
@@ -252,11 +303,7 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 	# Execute the bounce 
 	if collision:
 		handleBounce(collision)
-	# Update combo counter 
-	comboCounter += 1
-	
-	# Update game feel 
-	velocity *= 1.2
+		
 	
 	return true
 # Temporary function to show launch strength visually

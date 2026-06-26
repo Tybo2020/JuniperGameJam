@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://155fmndw22oa"]
+
+[ext_resource type="Script" uid="uid://c46bqrwestega" path="res://scripts/combo_sprite.gd" id="1_e4nn5"]
+
+[node name="combo_sprite" type="Panel" unique_id=1983284545]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_e4nn5")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1837976174]
