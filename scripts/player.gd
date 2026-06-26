@@ -10,12 +10,13 @@ var currentHealthCount: int = 0
 
 ####### Upgrade Variables ########
 @export var maxHealthCount: int = 3
-var maxComboCount: int = 5
+var maxComboCount: int = 4
 @export var comboVelocityMultiplier: float = 1.2
-@export var bounceWindowDuration: float = 0.4 # 24 frames at 60fps
+@export var bounceWindowDuration: float = 0.15 
 @export var maxChargeTime: float = 2.0
 
-####### Combo Configuration ######## 
+####### Combo Configuration ########
+@export var baseMaxVelocity: float = 600.0 
 var comboCounter: int = 0
 @export var comboDecayTime: float = 2.0
 var comboDecayTimer = null
@@ -41,7 +42,8 @@ var launchDirection: Vector2 = Vector2.ZERO
 ###### Bounce Configuration #######
 @onready var bounceDetector: Area2D = $BounceDetector
 @export var maxBounces: int = 3
-@export var bounceCooldown: float = 0.4
+@export var bounceCooldown: float = 2
+var bounceCooldownTimer = null
 
 var bounces: int = 0
 var isBouncing: bool = false
@@ -52,7 +54,6 @@ const SPEED = 100.0
 
 signal hit
 signal deflect
-signal healed(currentHealth: int)
 signal max_health_changed(newMax: int)
 
 var isInvulnerable: bool = false
@@ -79,18 +80,11 @@ func _hit() -> void:
 	isInvulnerable = true
 	await get_tree().create_timer(2.5).timeout
 	isInvulnerable = false
-	
+
 func _deflect() -> void:
 	if comboCounter < maxComboCount:
 		comboCounter += 1
 		velocity *= comboVelocityMultiplier
-		
-		# Capture velocity the moment max combo is reached
-		if comboCounter == maxComboCount:
-			maxComboVelocity = velocity
-	else:
-		# Already at max, restore to saved max 
-		velocity = maxComboVelocity
 	
 	deflect.emit(comboCounter)
 	_resetComboDecayTimer()
@@ -167,45 +161,41 @@ func _physics_process(delta: float) -> void:
 	if isCharging and !isLaunched:
 		playAnimation("charge")
 		velocity = Vector2.ZERO
-		var currentMousePos = get_local_mouse_position()
-		var distance = currentMousePos.distance_to(initialMousePos)
-		launchDirection = currentMousePos.direction_to(initialMousePos)
-		chargeRatio = clamp(distance / maxLaunchPullback, 0.0, 1.0)
+		currentChargeTime += delta
+		currentChargeTime = clamp(currentChargeTime, 0.0, maxChargeTime)
+		chargeRatio = currentChargeTime / maxChargeTime
 		
+		# Use mouse for aim line direction
+		launchDirection = get_local_mouse_position().normalized()
 		update_aim_line()
 	
 	var collisionInfo = move_and_collide(velocity * delta)
 	if collisionInfo and isBouncing:
 		executeSuccessfulBounce(collisionInfo.get_collider(), collisionInfo)
-		_deflect()
+		
 	elif collisionInfo:
 		handleBounce(collisionInfo)
 		
 	if isLaunched:
-		#if not isKillingEnemy:
-			## Do not decay velocity until after enemy is dead
-			#pass
-		#else:
-		# Natural decay every frame
-		playAnimation("spin")
-		velocity = velocity.move_toward(Vector2.ZERO, velocity.length() * (delta / launchDecay))
+		# Only decay if below max combo
+		if comboCounter < maxComboCount:
+			velocity = velocity.move_toward(Vector2.ZERO, velocity.length() * (delta / launchDecay))
 
-		# Hold "halt" to brake faster
 		if Input.is_action_pressed("halt"):
 			velocity = velocity.move_toward(Vector2.ZERO, HALT_SPEED * delta)
-			##### Slide Animations 
 			if abs(velocity.x) > abs(velocity.y):
 				if velocity.x > 0:
-					playAnimation("slide_side", true) # Face Right
+					playAnimation("slide_side", true)
 				else:
-					playAnimation("slide_side", false) # Face Left (Mirrored)
+					playAnimation("slide_side", false)
 			else:
 				if velocity.y < 0:
 					playAnimation("slide_up")
 				else:
 					playAnimation("slide_down")
+		else:
+			playAnimation("spin")
 
-		# Clear launched state once basically stopped
 		if velocity.length_squared() < 5.0:
 			velocity = Vector2.ZERO
 			isLaunched = false
@@ -217,15 +207,20 @@ func _input(event):
 		return
 	if event.is_action_pressed("charge") and !isLaunched:
 		isCharging = true
-		initialMousePos = get_local_mouse_position()
-		#print("Charge key pressed")
-		#isCharging = true
-		#currentChargeTime = 0.0
+		currentChargeTime = 0.0
 	
 	if event.is_action_released("charge") and isCharging and !isLaunched:
 		isCharging = false
-		#print("Charge released, launching")
+		launchDirection = get_local_mouse_position().normalized()
 		executeLaunch()
+		
+	# Right click cancels charge
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		if isCharging:
+			isCharging = false
+			currentChargeTime = 0.0
+			chargeRatio = 0.0
+			aim_line.visible = false
 	
 	if event.is_action_pressed("bounce") and canBounce:
 		shieldSprite.show()
@@ -261,45 +256,44 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 	move_and_collide(reflect)
 	
 func executeLaunch() -> void:
-	isCharging = false 
+	isCharging = false
 	isLaunched = true
-	# Calculate chargeTime ratio
-	#chargeRatio = (currentChargeTime / maxChargeTime)
-
-	# Calculate launchForce 
 	var launchForce = lerp(minLaunchStrength, maxLaunchStrength, chargeRatio)
-
-	# Determine launch direction 
-	#launchDirection = get_local_mouse_position().normalized()
-	#print("Mouse position: ", launchDirection)
-
-	# Apply velocity
-	velocity = launchDirection * launchForce 
-	#print("Launch velocity: ", velocity)
+	velocity = launchDirection * launchForce
 	aim_line.visible = false
 
 func triggerBounceWindow() -> void:
 	isBouncing = true
 	canBounce = false
-	#print("Bounce window OPENED")
 	
-	# Create a timer for the duration of the window
+	for body in bounceDetector.get_overlapping_bodies():
+		if isBouncing:
+			executeSuccessfulBounce(body, null)
+			break
+	
 	await get_tree().create_timer(bounceWindowDuration).timeout
 	isBouncing = false
-	#print("Bounce window Closed")
 	
-	# Create a timer for the recovery cooldown penalty 
-	# Can decide later if we want to keep a penalty or find another way 
-	# to reward the player for timing the bounce successfully
-	#await get_tree().create_timer(bounceCooldown).timeout
-	canBounce = true
+	print("After window, canBounce: ", canBounce)
+	if not canBounce:
+		_startBounceCooldown()
+		
+func _startBounceCooldown() -> void:
+	# Cancel existing cooldown if one is running
+	if bounceCooldownTimer != null:
+		bounceCooldownTimer.timeout.disconnect(_on_bounce_cooldown_finished)
+	
+	canBounce = false
+	bounceCooldownTimer = get_tree().create_timer(bounceCooldown)
+	bounceCooldownTimer.timeout.connect(_on_bounce_cooldown_finished)
 
-func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D = null) -> bool:
-	# Close the bounce window on success
-	isBouncing = false
-	#print("Successfully timed bounce on: ", obstacle.name)
+func _on_bounce_cooldown_finished() -> void:
+	canBounce = true
+	bounceCooldownTimer = null
 	
-	# If executed on an enemy, destory it here 
+func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D = null) -> bool:
+	isBouncing = false
+	
 	if obstacle.is_in_group("enemies") && isLaunched:
 		if velocity.length() >= killVelocityThreshold:
 			isKillingEnemy = true
@@ -308,12 +302,19 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 		else:
 			obstacle.die()
 	
-	# Execute the bounce 
 	if collision:
 		handleBounce(collision)
-		
+	
+	# Cancel cooldown on successful bounce so player can chain immediately
+	if bounceCooldownTimer != null:
+		bounceCooldownTimer.timeout.disconnect(_on_bounce_cooldown_finished)
+		bounceCooldownTimer = null
+	canBounce = true
+	
+	_deflect()
 	
 	return true
+	
 # Temporary function to show launch strength visually
 func update_aim_line() -> void:
 	aim_line.visible = true

@@ -344,8 +344,6 @@ position = Vector2(383.3333, 266.66666)
 scale = Vector2(1.2, 1.2)
 sprite_frames = SubResource("SpriteFrames_qixts")
 animation = &"spin"
-frame = 37
-frame_progress = 1.0
 
 [node name="lever_highlight" type="Sprite2D" parent="." unique_id=1018994588]
 position = Vector2(666.6667, 266.66666)

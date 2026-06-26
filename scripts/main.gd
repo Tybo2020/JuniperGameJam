@@ -27,7 +27,7 @@ func _input(event: InputEvent) -> void:
 func _ready() -> void:
 	new_game()
 	$Player.hit.connect(heartsContainer.updateHearts)
-	$Player.healed.connect(heartsContainer.updateHearts)
+	#$Player.healed.connect(heartsContainer.updateHearts)
 	$Player.max_health_changed.connect(func(newMax):
 		await heartsContainer.setMaxHearts(newMax)
 		heartsContainer.updateHearts($Player.currentHealthCount))
@@ -70,37 +70,33 @@ func _on_enemy_timer_timeout():
 	var enemy_spawn_location = $EnemyPath/EnemySpawnLocation
 	enemy_spawn_location.progress_ratio = randf()
 	
-	# Capture position and direction before awaiting
+	# Capture position before awaiting to prevent race condition
 	var spawn_position = enemy_spawn_location.position
 	
 	# Set warning location to be at the same point as the enemy spawn
 	warning.setup(spawn_position, 2.0)
 	
-	# Wait for warning timer, pause enemy timer
+	# Wait for warning timer
 	await get_tree().create_timer(2.0, true).timeout
 	
-	# Set the enemy to a random location 
+	# Set the enemy to spawn position
 	enemy.position = spawn_position
 	
-	# Set the enemy direction to be perpendicular to the path
-	var direction = enemy_spawn_location.rotation + PI / 2
-	direction += randf_range(-PI/4, PI/4)
-	enemy.rotation = direction
-	
-	var velocity = Vector2(randf_range(150.0, 250.0), 0.0)
-	enemy.linear_velocity = velocity.rotated(direction)
+	# Scale enemy speed with wave number
+	var waveSpeedMultiplier = 1.0 + (currentWave - 1) * 0.1
+	var speed = randf_range(150.0, 250.0) * waveSpeedMultiplier
+	var direction = randf_range(0, TAU)
+	enemy.linear_velocity = Vector2(speed, 0.0).rotated(direction)
 	
 	# Connect died signal to keep track of when to end the wave
 	enemy.died.connect(_on_enemy_died)
 	# Spawn the enemy by adding it as a child of the Main scene
 	add_child(enemy)
-	#warning.queue_free()
 	
 	# Restart timer to spawn next enemy
 	if currentEnemyCount < maxEnemyCount:
 		$EnemyTimer.start()
-	
-
+		
 func _on_enemy_died() -> void:
 	killCount += 1
 	# Check if all enemies that were spawned this wave have died
@@ -108,20 +104,24 @@ func _on_enemy_died() -> void:
 		end_wave()
 
 func start_next_wave() -> void:
-	# Update hearts UI in case max health changed from upgrade
 	heartsContainer.updateHearts($Player.currentHealthCount)
 	currentWave += 1
 	currentEnemyCount = 0
 	killCount = 0
 	
-	# Only scale enemy count after wave 1
+	# Scale difficulty each wave
 	if currentWave > 1:
-		maxEnemyCount += 10
+		# More enemies each wave
+		maxEnemyCount += 3
+		# Increase kill threshold so players need higher combo at later waves
+		$Player.killVelocityThreshold += 50.0
+	
 	$EnemyTimer.start()
 
 func end_wave() -> void:
 	$ScoreTimer.stop()
 	$EnemyTimer.stop()
+	await get_tree().create_timer(2.0).timeout
 	$SlotMachine.show()
 	if not $SlotMachine.spin_finished.is_connected(_on_spin_finished):
 		$SlotMachine.spin_finished.connect(_on_spin_finished, CONNECT_ONE_SHOT)

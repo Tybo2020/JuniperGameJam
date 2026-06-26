@@ -12,6 +12,8 @@ func _ready() -> void:
 	cardContainer.upgrade_chosen.connect(_on_upgrade_chosen)
 	cardContainer.show_description.connect(_on_card_hovered)
 	cardContainer.hide_description.connect(_on_card_unhovered)
+	# Wait one frame before playing to ensure web renderer is ready
+	await get_tree().process_frame
 	slotMachineSprite.play("loop")
 
 func _on_clicked():

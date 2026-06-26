@@ -1,51 +1,41 @@
 extends RigidBody2D
+
 const SPEED = 50
 var player: Node2D = null
-var isDying = false
-var maxHealthCount = 2
-var currentHealthCount = 0
+var currentAnimation: String = ""
+
+@export var maxHealthCount: int = 2
+var currentHealthCount: int = 0
+
 var is_dying: bool = false
-var is_hit: bool = false 
+var is_hit: bool = false
 
 signal died
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	#var mob_types = Array($AnimatedSprite2D.sprite_frames.get_animation_names())
-	##$AnimatedSprite2D.animation = mob_types.pick_random()
-	##$AnimatedSprite2D.play()
-	
+	lock_rotation = true
 	currentHealthCount = maxHealthCount
 	add_to_group("enemies")
+	
 	# Store reference to player
 	player = get_tree().get_first_node_in_group("player")
-	
 	if player == null:
-		print("failed to grab player ")
-		
-	#print("Player position: ", player.global_position)
+		print("Failed to grab player")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
-	
 func _physics_process(_delta: float) -> void:
 	if player:
 		# Calculate direction towards player
 		var direction = global_position.direction_to(player.global_position)
 		linear_velocity = direction * SPEED
+		
+		# Play animations based on movement direction
 		if abs(linear_velocity.x) > abs(linear_velocity.y):
-			if linear_velocity.x > 0:
-				$AnimatedSprite2D.play("walk_side")
-				$AnimatedSprite2D.flip_h = false # Face Right
-			else:
-				$AnimatedSprite2D.play("walk_side")
-				$AnimatedSprite2D.flip_h = true # Face Left
+			playAnimation("walk_side", linear_velocity.x < 0)
 		else:
 			if linear_velocity.y < 0:
-				$AnimatedSprite2D.play("walk_up")
+				playAnimation("walk_up")
 			else:
-				$AnimatedSprite2D.play("walk_down")
-
+				playAnimation("walk_down")
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()
@@ -55,24 +45,36 @@ func die() -> void:
 		return
 	is_dying = true
 	
-	set_physics_process(false)  # stop chasing the player
-	$CollisionShape2D.set_deferred("disabled", true)  # stop further collisions/bounces
+	playAnimation("death")
 	
-	await get_tree().create_timer(0.5).timeout  # adjust delay as you like
+	# Stop chasing the player
+	set_physics_process(false)
+	# Stop further collisions
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	await get_tree().create_timer(0.5).timeout
 	died.emit()
 	queue_free()
 
-func hit() -> void: 
-	print("Enemy Health", currentHealthCount)
-	if currentHealthCount < 1:
-		die()
+func hit() -> void:
+	if is_hit or is_dying:
 		return
-	if is_hit:
-		return 
-	else: 
-		is_hit = true
+	is_hit = true
 	
 	currentHealthCount -= 1
-	#flash red, add slight delay to prevent dying instantly
-	await get_tree().create_timer(0.5).timeout
+	print("Enemy Health: ", currentHealthCount)
 	
+	# Die if health runs out
+	if currentHealthCount <= 0:
+		die()
+		return
+	
+	# Brief invulnerability window after hit
+	await get_tree().create_timer(0.3).timeout
+	is_hit = false
+
+func playAnimation(anim: String, flipH: bool = false) -> void:
+	if currentAnimation != anim or $AnimatedSprite2D.flip_h != flipH:
+		currentAnimation = anim
+		$AnimatedSprite2D.flip_h = flipH
+		$AnimatedSprite2D.play(anim)

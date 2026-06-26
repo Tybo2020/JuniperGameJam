@@ -24,7 +24,7 @@ func _ready() -> void:
 		create_upgrade("Combo Limit", "Increase max combo limit by 1. Each combo increases spin velocity by 20%", 1, comboLimitTexture),
 		create_upgrade("Scythe Upgrade", "Increase combo scaling by an additional 5%", 0.05, scytheUpgradeTexture),
 		create_upgrade("Rebound Upgrade", "Increase perfect rebound timing window", 0.1, reboundUpgradeTexture),
-		create_upgrade("Haste", "Decrease charge time", 1, hasteTexture),
+		create_upgrade("Haste", "Decrease charge time by 20% ", 0.2, hasteTexture),
 						
 	]
 
@@ -64,8 +64,8 @@ func applyUpgrade(upgrade_data: UpgradeData) -> void:
 			player.bounceWindowDuration += upgrade_data.value
 			print("Bounce Window Duration: ", player.bounceWindowDuration)
 		"Haste":
-			# player.maxLaunchPullback -= upgrade_data.value * 50
-			pass
+			player.maxChargeTime = max(player.maxChargeTime * 0.8, 0.5)
+			print("Max Charge Time: ", player.maxChargeTime)
 	
 
 func displayNewUpgrades() -> void:
