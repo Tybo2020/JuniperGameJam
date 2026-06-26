@@ -1,6 +1,7 @@
 extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
 @onready var animatedSprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var shieldSprite: AnimatedSprite2D = $shieldSprite
 var currentAnimation: String = ""
 
 @export var lowChargeColor: Color = Color.YELLOW
@@ -219,7 +220,13 @@ func _input(event):
 		executeLaunch()
 	
 	if event.is_action_pressed("bounce") and canBounce:
+		shieldSprite.show()
+		shieldSprite.play("rebound")
 		triggerBounceWindow()
+		
+		await shieldSprite.animation_finished
+		shieldSprite.hide()
+		
 		
 func handleBounce(collision: KinematicCollision2D) -> void:
 	var obstacle = collision.get_collider()

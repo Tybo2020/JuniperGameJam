@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bf1kulou3w05a"]
+
+[ext_resource type="AudioStream" uid="uid://iri3ehi3stqt" path="res://assets/audio/xDeviruchi - Prepare for Battle! .wav" id="1_cm38v"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" unique_id=650511772]
+stream = ExtResource("1_cm38v")
+volume_db = -32.0

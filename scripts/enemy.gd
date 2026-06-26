@@ -11,8 +11,8 @@ signal died
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var mob_types = Array($AnimatedSprite2D.sprite_frames.get_animation_names())
-	$AnimatedSprite2D.animation = mob_types.pick_random()
-	$AnimatedSprite2D.play()
+	#$AnimatedSprite2D.animation = mob_types.pick_random()
+	#$AnimatedSprite2D.play()
 	
 	currentHealthCount = maxHealthCount
 	add_to_group("enemies")
@@ -33,6 +33,19 @@ func _physics_process(_delta: float) -> void:
 		# Calculate direction towards player
 		var direction = global_position.direction_to(player.global_position)
 		linear_velocity = direction * SPEED
+		if abs(linear_velocity.x) > abs(linear_velocity.y):
+			if linear_velocity.x > 0:
+				$AnimatedSprite2D.play("walk_side")
+				$AnimatedSprite2D.flip_h = false # Face Right
+			else:
+				$AnimatedSprite2D.play("walk_side")
+				$AnimatedSprite2D.flip_h = true # Face Left
+		else:
+			if linear_velocity.y < 0:
+				$AnimatedSprite2D.play("walk_up")
+			else:
+				$AnimatedSprite2D.play("walk_down")
+
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()

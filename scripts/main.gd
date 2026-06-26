@@ -54,14 +54,17 @@ func _on_enemy_timer_timeout():
 	var enemy_spawn_location = $EnemyPath/EnemySpawnLocation
 	enemy_spawn_location.progress_ratio = randf()
 	
+	# Capture position and direction before awaiting
+	var spawn_position = enemy_spawn_location.position
+	
 	# Set warning location to be at the same point as the enemy spawn
-	warning.setup(enemy_spawn_location.position, 2.0)
+	warning.setup(spawn_position, 2.0)
 	
 	# Wait for warning timer, pause enemy timer
 	await get_tree().create_timer(2.0).timeout
 	
 	# Set the enemy to a random location 
-	enemy.position = enemy_spawn_location.position
+	enemy.position = spawn_position
 	
 	# Set the enemy direction to be perpendicular to the path
 	var direction = enemy_spawn_location.rotation + PI / 2
@@ -75,16 +78,17 @@ func _on_enemy_timer_timeout():
 	enemy.died.connect(_on_enemy_died)
 	# Spawn the enemy by adding it as a child of the Main scene
 	add_child(enemy)
+	#warning.queue_free()
 	
-	# Stop after spawning the last enemy
-	if currentEnemyCount >= maxEnemyCount:
-		$EnemyTimer.stop()
-
+	# Restart timer to spawn next enemy
+	if currentEnemyCount < maxEnemyCount:
+		$EnemyTimer.start()
+	
 
 func _on_enemy_died() -> void:
 	killCount += 1
 	# Check if all enemies that were spawned this wave have died
-	if killCount == maxEnemyCount:
+	if killCount >= maxEnemyCount:
 		end_wave()
 
 func start_next_wave() -> void:
@@ -105,7 +109,7 @@ func end_wave() -> void:
 
 func _on_spin_finished() -> void:
 	# Wait for player to choose upgrade before starting next wave
-	$CanvasLayer/slot_machine/card_container.upgrade_chosen.connect(_on_upgrade_chosen, CONNECT_ONE_SHOT)
+	$SlotMachine/card_container.upgrade_chosen.connect(_on_upgrade_chosen, CONNECT_ONE_SHOT)
 
 func _on_upgrade_chosen() -> void:
 	start_next_wave()

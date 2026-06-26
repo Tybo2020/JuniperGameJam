@@ -327,33 +327,37 @@ animations = [{
 }]
 
 [node name="slot_machine" type="CanvasLayer" unique_id=1209723319]
+scale = Vector2(0.72, 0.72)
+transform = Transform2D(0.72, 0, 0, 0.72, 0, 0)
 script = ExtResource("1_xjw1r")
 
 [node name="slot_machine_sprite" type="AnimatedSprite2D" parent="." unique_id=120682619]
-position = Vector2(320, 183.99998)
+position = Vector2(620, 213.33333)
 sprite_frames = SubResource("SpriteFrames_qixts")
 animation = &"spin"
 frame = 37
 frame_progress = 1.0
 
 [node name="lever_highlight" type="Sprite2D" parent="." unique_id=1018994588]
-position = Vector2(552, 184)
+position = Vector2(852, 213.33333)
 texture = ExtResource("3_yohb1")
 
 [node name="lever_hitbox" type="Control" parent="." unique_id=1502132615]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 512.0
-offset_top = 8.0
-offset_right = 576.0
-offset_bottom = 72.0
+offset_left = 812.0
+offset_top = 37.33337
+offset_right = 876.0
+offset_bottom = 101.33336
+metadata/_edit_use_anchors_ = true
 
 [node name="card_container" parent="." unique_id=355849217 instance=ExtResource("4_2e0ow")]
-offset_left = -111.520004
-offset_top = -0.64001465
-offset_right = 588.48
-offset_bottom = 39.359985
+offset_left = 188.47997
+offset_top = 28.693314
+offset_right = 888.48
+offset_bottom = 68.69331
 theme_override_constants/separation = 142
+metadata/_edit_use_anchors_ = true
 
 [connection signal="gui_input" from="lever_hitbox" to="." method="_on_lever_hitbox_gui_input"]
 [connection signal="mouse_entered" from="lever_hitbox" to="." method="_on_lever_hitbox_mouse_entered"]
