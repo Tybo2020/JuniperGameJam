@@ -4,7 +4,7 @@ extends HBoxContainer
 @onready var UpgradeDataClass = preload("res://scripts/upgrade_data.gd")
 
 var allPerks: Array = []
-var last_perk: UpgradeData
+signal upgrade_chosen
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# create upgrades 
@@ -20,41 +20,42 @@ func _ready() -> void:
 						
 	]
 
-func _on_upgrade_selected(upgrade_data) -> void:
-	# apply upgrade to player
-	# hide upgrade UI
+func _on_upgrade_selected(upgrade_data: UpgradeData) -> void:
+	applyUpgrade(upgrade_data)
+	
+	# Notify slot machine the choice is made
+	upgrade_chosen.emit()
+
+func applyUpgrade(upgrade_data: UpgradeData) -> void:
+	# Apply the upgrade effect to the player
 	pass
 
-func displayUpgrades() -> void:
-	var shuffled = allPerks.duplicate()
-	shuffled.shuffle()
+func displayNewUpgrades() -> void:
+	# Clear any cards from previous wave first
+	for card in get_children():
+		card.queue_free()
 	
-	for i in range(min(3, shuffled.size())):
+	# Instantiate fresh cards, ensure no duplicates appear in the same roll
+	var usedPerks: Array = []
+	for i in range(3):
 		var card = CardGuiClass.instantiate()
-		card.setup(shuffled[i])
 		card.upgrade_selected.connect(_on_upgrade_selected)
 		add_child(card)
+		var perk = getRandomPerk()
+		while perk in usedPerks:
+			perk = getRandomPerk()
+		usedPerks.append(perk)
+		card.setup(perk)
+		
+# Choose perk and attach to card_sprite
+func getRandomPerk() -> UpgradeData:
+	return allPerks[randi() % allPerks.size()]
 
-func rerollUpgrade(index: int) -> void:
-	var card = get_child(index)
-	# Exclude the card's current perk
-	var new_perk = getRandomPerk(card.upgrade_data) 
-	card.setup(new_perk)
-	
-
-# Choose modifier and attach to card_sprite
-func getRandomPerk(excludedPerk: UpgradeData = null) -> UpgradeData:
-	var random_perk = allPerks[randi() % allPerks.size()]
-	while random_perk == excludedPerk and allPerks.size() > 1:
-		# Last perk was already chosen, try again until we find a unique one
-		random_perk = allPerks[randi() % allPerks.size()]
-	
-	return random_perk
-
-func create_upgrade(perkName: String, description: String, value: float, spritePath: String = "") -> UpgradeData:
+# Will need to change icon to Texture 2D instead of string
+func create_upgrade(perkName: String, description: String, value: float, spriteIcon: String = "") -> UpgradeData:
 	var data = UpgradeDataClass.new()
 	data.name = perkName
 	data.description = description
 	data.value = value
-	data.spritePath = spritePath
+	data.icon = spriteIcon
 	return data

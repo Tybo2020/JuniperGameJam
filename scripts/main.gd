@@ -2,12 +2,13 @@
 extends Node
 @onready var heartsContainer = $CanvasLayer/health_container
 @onready var comboSprite = $CanvasLayer2/combo_sprite
+@onready var slotMachineSprite = $slot_machine/slot_machine_sprite
 @export var warning_scene: PackedScene 
 @export var enemy_scene: PackedScene
 @export var maxEnemyCount: int = 5
 var currentEnemyCount: int
 var score
-var currentWave: int = 1
+var currentWave: int = 0
 var killCount: int = 0
 
 # Called when the node enters the scene tree for the first time.
@@ -15,6 +16,7 @@ func _ready() -> void:
 	new_game()
 	$Player.hit.connect(heartsContainer.updateHearts)
 	$Player.deflect.connect(comboSprite.update)
+	$SlotMachine.hide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -95,12 +97,16 @@ func start_next_wave() -> void:
 		maxEnemyCount += 10
 	$EnemyTimer.start()
 
-func end_wave():
+func end_wave() -> void:
 	$ScoreTimer.stop()
 	$EnemyTimer.stop()
-	# display upgrade screen
-	
-	await get_tree().create_timer(10.0).timeout
-	# once upgrade is chosen, restart the start timer to begin the next wave
+	$SlotMachine.show()
+	$SlotMachine.spin_finished.connect(_on_spin_finished, CONNECT_ONE_SHOT)
+
+func _on_spin_finished() -> void:
+	# Wait for player to choose upgrade before starting next wave
+	$CanvasLayer/slot_machine/card_container.upgrade_chosen.connect(_on_upgrade_chosen, CONNECT_ONE_SHOT)
+
+func _on_upgrade_chosen() -> void:
 	start_next_wave()
 	
