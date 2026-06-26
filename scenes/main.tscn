@@ -100,13 +100,12 @@ offset_top = 3.6799998
 offset_right = 43.52
 offset_bottom = 43.68
 
-[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1956243767]
-visible = false
-
-[node name="combo_sprite" parent="CanvasLayer2" unique_id=1983284545 instance=ExtResource("5_tefeu")]
-
 [node name="SlotMachine" parent="." unique_id=1209723319 instance=ExtResource("7_o6xl0")]
 visible = false
+
+[node name="combo_sprite" parent="." unique_id=1983284545 instance=ExtResource("5_tefeu")]
+offset_top = 56.0
+offset_bottom = 96.0
 
 [node name="Arena" type="Sprite2D" parent="." unique_id=1534950488]
 z_index = -1

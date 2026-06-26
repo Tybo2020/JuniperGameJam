@@ -1,8 +1,8 @@
 # Adapted from Godot's First 2D Game tutorial
 extends Node
 @onready var heartsContainer = $CanvasLayer/health_container
-@onready var comboSprite = $CanvasLayer2/combo_sprite
-@onready var slotMachineSprite = $slot_machine/slot_machine_sprite
+@onready var comboSprite = $combo_sprite
+@onready var slotMachineSprite = $SlotMachine/slot_machine_sprite
 @export var warning_scene: PackedScene 
 @export var enemy_scene: PackedScene
 @export var maxEnemyCount: int = 5

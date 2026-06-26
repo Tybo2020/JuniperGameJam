@@ -63,7 +63,7 @@ func _hit() -> void:
 		return
 		
 	currentHealthCount -= 1
-	print("Hit! Health remaining: ", currentHealthCount)
+	#print("Hit! Health remaining: ", currentHealthCount)
 	hit.emit(currentHealthCount)
 	
 	if currentHealthCount <= 0:
@@ -216,7 +216,7 @@ func _input(event):
 	
 	if event.is_action_released("charge") and isCharging and !isLaunched:
 		isCharging = false
-		print("Charge released, launching")
+		#print("Charge released, launching")
 		executeLaunch()
 	
 	if event.is_action_pressed("bounce") and canBounce:
@@ -263,11 +263,11 @@ func executeLaunch() -> void:
 
 	# Determine launch direction 
 	#launchDirection = get_local_mouse_position().normalized()
-	print("Mouse position: ", launchDirection)
+	#print("Mouse position: ", launchDirection)
 
 	# Apply velocity
 	velocity = launchDirection * launchForce 
-	print("Launch velocity: ", velocity)
+	#print("Launch velocity: ", velocity)
 	aim_line.visible = false
 
 func triggerBounceWindow() -> void:

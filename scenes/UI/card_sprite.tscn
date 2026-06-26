@@ -1,31 +1,46 @@
 [gd_scene format=3 uid="uid://bmksljbldq6r1"]
 
 [ext_resource type="Script" uid="uid://6bdibc2m3ncw" path="res://scripts/card_sprite.gd" id="1_b0foj"]
+[ext_resource type="FontFile" uid="uid://bx7fnneuwlchl" path="res://assets/fonts/Abaddon Bold.ttf" id="2_vry2g"]
+[ext_resource type="Texture2D" uid="uid://djebxrnn6fnvi" path="res://assets/perks/HEALTHUPGRADE.png" id="2_wajic"]
 
 [node name="card_sprite" type="Panel" unique_id=1276651832]
 self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(99.645, 200)
 anchors_preset = -1
 anchor_left = 0.268
 anchor_top = 0.425
 anchor_right = 0.268
 anchor_bottom = 0.425
 offset_left = 0.26397705
-offset_top = 0.035003662
-offset_right = 40.263977
-offset_bottom = 40.035004
+offset_top = -99.0
+offset_right = 103.479996
+offset_bottom = 133.0
 script = ExtResource("1_b0foj")
 
 [node name="modifier_sprite" type="Sprite2D" parent="." unique_id=1501472375]
-position = Vector2(-15.783981, 12.964996)
+position = Vector2(65.21602, 104)
+texture = ExtResource("2_wajic")
+vframes = 2
+frame = 1
 
-[node name="Label" type="Label" parent="." unique_id=523773816]
+[node name="name_label" type="Label" parent="." unique_id=523773816]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = -1.1
-anchor_top = 2.2770002
-anchor_right = -1.1
-anchor_bottom = 2.2770002
-offset_left = -20.0
-offset_top = -11.515007
-offset_right = 20.0
-offset_bottom = 11.484993
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -19.0
+offset_top = -6.0
+offset_right = 21.0
+offset_bottom = 17.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_vry2g")
+
+[node name="description_label" type="Label" parent="." unique_id=187368238]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("2_vry2g")

@@ -2,6 +2,7 @@ extends CanvasLayer
 @onready var slotMachineSprite = $slot_machine_sprite
 @onready var leverHighlight = $lever_highlight
 @onready var cardContainer = $card_container
+@onready var descriptionLabel = $description_label
 
 var hasBeenPulled: bool = false
 signal spin_finished 
@@ -9,6 +10,8 @@ signal spin_finished
 func _ready() -> void:
 	leverHighlight.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	cardContainer.upgrade_chosen.connect(_on_upgrade_chosen)
+	cardContainer.show_description.connect(_on_card_hovered)
+	cardContainer.hide_description.connect(_on_card_unhovered)
 	slotMachineSprite.play("loop")
 
 func _on_clicked():
@@ -40,3 +43,10 @@ func _on_lever_hitbox_gui_input(event: InputEvent) -> void:
 func _on_upgrade_chosen() -> void:
 	hide()
 	hasBeenPulled = false
+
+func _on_card_hovered(description: String) -> void:
+	descriptionLabel.text = description
+	descriptionLabel.show()
+
+func _on_card_unhovered() -> void:
+	descriptionLabel.hide()

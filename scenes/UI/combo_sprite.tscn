@@ -1,10 +1,18 @@
 [gd_scene format=3 uid="uid://155fmndw22oa"]
 
 [ext_resource type="Script" uid="uid://c46bqrwestega" path="res://scripts/combo_sprite.gd" id="1_e4nn5"]
+[ext_resource type="Texture2D" uid="uid://cj7pjxoxcblp5" path="res://assets/combo.png" id="2_fg5ae"]
 
 [node name="combo_sprite" type="Panel" unique_id=1983284545]
-offset_right = 40.0
-offset_bottom = 40.0
+self_modulate = Color(1, 1, 1, 0)
+offset_left = 8.0
+offset_top = 64.0
+offset_right = 48.0
+offset_bottom = 104.0
 script = ExtResource("1_e4nn5")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1837976174]
+position = Vector2(15.999999, 15.999999)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_fg5ae")
+hframes = 7

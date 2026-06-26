@@ -10,9 +10,9 @@ var is_hit: bool = false
 signal died
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var mob_types = Array($AnimatedSprite2D.sprite_frames.get_animation_names())
-	#$AnimatedSprite2D.animation = mob_types.pick_random()
-	#$AnimatedSprite2D.play()
+	#var mob_types = Array($AnimatedSprite2D.sprite_frames.get_animation_names())
+	##$AnimatedSprite2D.animation = mob_types.pick_random()
+	##$AnimatedSprite2D.play()
 	
 	currentHealthCount = maxHealthCount
 	add_to_group("enemies")
