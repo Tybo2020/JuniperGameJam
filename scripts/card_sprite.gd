@@ -3,7 +3,6 @@ extends Panel
 @onready var modifierSprite = $modifier_sprite
 @onready var nameLabel = $name_label
 @onready var descriptionLabel = $description_label
-
 var upgrade_data: UpgradeData = null
 
 signal upgrade_selected(upgrade_data)
@@ -42,4 +41,6 @@ func _on_clicked() -> void:
 	print("clicked!")
 	if upgrade_data == null:
 		return
+
 	upgrade_selected.emit(upgrade_data)
+	

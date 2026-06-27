@@ -10,6 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://ds7pjxt2kjb25" path="res://assets/shieldsprite.png" id="5_ur7pv"]
 [ext_resource type="Texture2D" uid="uid://l83hwcgol1nr" path="res://assets/WALK v2.png" id="7_d2wvv"]
 [ext_resource type="PackedScene" uid="uid://c2k687uk2d4ks" path="res://scenes/sfx/bounceSfx.tscn" id="10_y4r1p"]
+[ext_resource type="AudioStream" uid="uid://bk4sao3h357lh" path="res://assets/audio/DSGNTonl_SKILL IMPACT-Deflected Hit_HY_PC.wav" id="11_d2wvv"]
+[ext_resource type="AudioStream" uid="uid://cpwje31vdvu4y" path="res://assets/audio/DSGNSynth_CAST-Mecha Speeding_HY_PC.wav" id="12_3v2ag"]
+[ext_resource type="AudioStream" uid="uid://wyqnday81d2t" path="res://assets/audio/MAGSpel_Anime Ability Ready 4.wav" id="13_jej6c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ur7pv"]
 atlas = ExtResource("3_smehm")
@@ -509,4 +512,13 @@ frame = 7
 frame_progress = 1.0
 
 [node name="BounceSfx" parent="." unique_id=765446256 instance=ExtResource("10_y4r1p")]
-autoplay = true
+stream = ExtResource("11_d2wvv")
+volume_db = -8.0
+
+[node name="ChargeSfx" type="AudioStreamPlayer" parent="." unique_id=158883114]
+stream = ExtResource("12_3v2ag")
+volume_db = -10.0
+
+[node name="LaunchReadySfx" type="AudioStreamPlayer" parent="." unique_id=1565553655]
+stream = ExtResource("13_jej6c")
+volume_db = -10.0

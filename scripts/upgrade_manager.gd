@@ -3,12 +3,12 @@ extends HBoxContainer
 @onready var CardGuiClass = preload("res://scenes/UI/card_sprite.tscn")
 @onready var UpgradeDataClass = preload("res://scripts/upgrade_data.gd")
 
-const healthUpgradeTexture = preload("res://assets/perks/HEALTHUPGRADE.png")
+const healthUpgradeTexture = preload("res://assets/heartperkupgrade.png")
 const healthPotionTexture = preload("res://assets/perks/health_potion.png")
 const reboundUpgradeTexture = preload("res://assets/perks/reboundupgrade.png")
 const scytheUpgradeTexture = preload("res://assets/perks/Scythe_upgrade.png")
 const hasteTexture = preload("res://assets/perks/stopwatch_haste.png")
-const comboLimitTexture = preload("res://assets/perks/combolimit.png")
+const comboLimitTexture = preload("res://assets/combolimitperk.png")
 
 var allPerks: Array = []
 signal upgrade_chosen
@@ -21,7 +21,7 @@ func _ready() -> void:
 	allPerks = [
 		create_upgrade("Health Upgrade", "Increase max heart count by 1", 1, healthUpgradeTexture),
 		create_upgrade("Health Potion", "Recover 1 heart", 1, healthPotionTexture),
-		create_upgrade("Combo Limit", "Increase max combo limit by 1. Each combo increases spin velocity by 20%", 1, comboLimitTexture),
+		create_upgrade("Combo Limit", "Increase max combo limit by 1", 1, comboLimitTexture),
 		create_upgrade("Scythe Upgrade", "Increase combo scaling by an additional 5%", 0.05, scytheUpgradeTexture),
 		create_upgrade("Rebound Upgrade", "Increase perfect rebound timing window", 0.1, reboundUpgradeTexture),
 		create_upgrade("Haste", "Decrease charge time by 20% ", 0.2, hasteTexture),

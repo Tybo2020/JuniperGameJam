@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://xy3ocrt2rng0"]
 
 [ext_resource type="Script" uid="uid://cd65e2ugag6f2" path="res://scenes/UI/pause_ui.gd" id="1_o2sb4"]
-[ext_resource type="Texture2D" uid="uid://djebxrnn6fnvi" path="res://assets/perks/HEALTHUPGRADE.png" id="2_jg8yc"]
+[ext_resource type="Texture2D" uid="uid://cmrxiu7ipvodw" path="res://assets/heartperkupgrade.png" id="2_fif1k"]
 [ext_resource type="FontFile" uid="uid://bx7fnneuwlchl" path="res://assets/fonts/Abaddon Bold.ttf" id="2_o2sb4"]
-[ext_resource type="Texture2D" uid="uid://bxun8sf7pboiv" path="res://assets/perks/combolimit.png" id="4_y8qm2"]
+[ext_resource type="Texture2D" uid="uid://mi5u076tt1yi" path="res://assets/combolimitperk.png" id="4_fif1k"]
 [ext_resource type="Texture2D" uid="uid://oj2cpuw0xinh" path="res://assets/perks/Scythe_upgrade.png" id="5_pugri"]
 [ext_resource type="Texture2D" uid="uid://lavo0lvfr85y" path="res://assets/perks/reboundupgrade.png" id="6_fif1k"]
 [ext_resource type="Texture2D" uid="uid://drk8ap6sqxwbh" path="res://assets/perks/stopwatch_haste.png" id="7_1xe8l"]
@@ -24,66 +24,42 @@ layout_mode = 0
 offset_right = 639.0
 offset_bottom = 359.0
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=215824652]
-position = Vector2(166.69998, 76.228)
-scale = Vector2(0.576, 0.564)
-texture = ExtResource("2_jg8yc")
-vframes = 2
-frame = 1
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=119622638]
+position = Vector2(167, 62.000004)
+scale = Vector2(0.9533337, 0.8941698)
+texture = ExtResource("2_fif1k")
 
-[node name="StatName" type="Label" parent="Sprite2D" unique_id=225766383]
-offset_left = 94.11768
-offset_top = -26.94737
-offset_right = 417.88232
-offset_bottom = 32.052628
+[node name="StatName" type="Label" parent="Sprite2D" unique_id=1016526781]
+offset_left = 53.496487
+offset_top = -5.5917845
+offset_right = 377.26114
+offset_bottom = 53.408215
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_o2sb4")
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 30
 metadata/_edit_use_anchors_ = true
 
-[node name="Value" type="Label" parent="Sprite2D" unique_id=1681425477]
-offset_left = 445.0764
-offset_top = -30.546093
-offset_right = 768.84094
-offset_bottom = 28.453907
+[node name="Value" type="Label" parent="Sprite2D" unique_id=1203365750]
+anchors_preset = -1
+anchor_left = 1.9740001
+anchor_top = 0.5
+anchor_right = 1.9740001
+anchor_bottom = 0.5
+offset_left = 147.99347
+offset_top = -33.210136
+offset_right = 334.7067
+offset_bottom = 28.026573
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_o2sb4")
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 30
 metadata/_edit_use_anchors_ = true
 
-[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=528732554]
-position = Vector2(166.69998, 130.228)
-scale = Vector2(0.549, 0.537)
-texture = ExtResource("4_y8qm2")
-vframes = 2
-frame = 1
-
-[node name="StatName" type="Label" parent="Sprite2D2" unique_id=847205934]
-offset_left = 94.11768
-offset_top = -26.94737
-offset_right = 417.88232
-offset_bottom = 32.052628
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_o2sb4")
-theme_override_font_sizes/font_size = 52
-metadata/_edit_use_anchors_ = true
-
-[node name="Value" type="Label" parent="Sprite2D2" unique_id=1494439624]
-offset_left = 468.6703
-offset_top = -30.918053
-offset_right = 792.43494
-offset_bottom = 28.081947
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_o2sb4")
-theme_override_font_sizes/font_size = 52
-metadata/_edit_use_anchors_ = true
-
-[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=89150591]
-position = Vector2(166.69998, 190.228)
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=89150591]
+position = Vector2(167, 134)
 scale = Vector2(0.54, 0.533)
-texture = ExtResource("5_pugri")
+texture = ExtResource("4_fif1k")
 
-[node name="StatName" type="Label" parent="Sprite2D3" unique_id=348821231]
+[node name="StatName" type="Label" parent="Sprite2D2" unique_id=348821231]
 offset_left = 94.11768
 offset_top = -26.94737
 offset_right = 417.88232
@@ -93,7 +69,7 @@ theme_override_fonts/font = ExtResource("2_o2sb4")
 theme_override_font_sizes/font_size = 52
 metadata/_edit_use_anchors_ = true
 
-[node name="Value" type="Label" parent="Sprite2D3" unique_id=617902376]
+[node name="Value" type="Label" parent="Sprite2D2" unique_id=617902376]
 offset_left = 478.1176
 offset_top = -30.796991
 offset_right = 801.88226
@@ -103,8 +79,33 @@ theme_override_fonts/font = ExtResource("2_o2sb4")
 theme_override_font_sizes/font_size = 52
 metadata/_edit_use_anchors_ = true
 
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=1680941722]
+position = Vector2(167, 206)
+scale = Vector2(0.54, 0.533)
+texture = ExtResource("5_pugri")
+
+[node name="StatName" type="Label" parent="Sprite2D3" unique_id=1815626369]
+offset_left = 94.11768
+offset_top = -26.94737
+offset_right = 417.88232
+offset_bottom = 32.052628
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
+[node name="Value" type="Label" parent="Sprite2D3" unique_id=513347885]
+offset_left = 477.77774
+offset_top = -30.018764
+offset_right = 801.54236
+offset_bottom = 28.981236
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_o2sb4")
+theme_override_font_sizes/font_size = 52
+metadata/_edit_use_anchors_ = true
+
 [node name="Sprite2D4" type="Sprite2D" parent="." unique_id=823235890]
-position = Vector2(166.7, 244.22798)
+position = Vector2(164.00002, 257)
 scale = Vector2(0.54, 0.525)
 texture = ExtResource("6_fif1k")
 
@@ -129,7 +130,7 @@ theme_override_font_sizes/font_size = 52
 metadata/_edit_use_anchors_ = true
 
 [node name="Sprite2D5" type="Sprite2D" parent="." unique_id=1507846394]
-position = Vector2(166.69998, 307.22803)
+position = Vector2(166, 316.00003)
 scale = Vector2(0.571, 0.564)
 texture = ExtResource("7_1xe8l")
 
@@ -155,9 +156,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="StageLabel" type="Label" parent="." unique_id=2091847255]
 layout_mode = 0
-offset_left = 218.0
-offset_top = 13.0
-offset_right = 541.0
-offset_bottom = 85.0
+offset_left = 266.0
+offset_top = 5.0
+offset_right = 589.0
+offset_bottom = 77.0
 theme_override_fonts/font = ExtResource("2_o2sb4")
 theme_override_font_sizes/font_size = 33

@@ -7,6 +7,7 @@ extends Node
 
 @export var warning_scene: PackedScene 
 @export var enemy_scene: PackedScene
+@export var baseEnemySpawnRate: float = 1.0 
 @export var maxEnemyCount: int = 5
 var currentEnemyCount: int
 var score
@@ -45,6 +46,7 @@ func game_over():
 func new_game():
 	score = 0
 	currentWave = 0
+	$EnemyTimer.wait_time = baseEnemySpawnRate
 	heartsContainer.setMaxHearts($Player.maxHealthCount)
 	$Player.start($StartPosition.position)
 	$StartTimer.start()
@@ -115,6 +117,12 @@ func start_next_wave() -> void:
 		maxEnemyCount += 3
 		# Increase kill threshold so players need higher combo at later waves
 		$Player.killVelocityThreshold += 50.0
+		# Players need more velocity to avoid damage at later waves
+		$Player.enemyDamageThreshold += 10.0
+		# Spawn enemies faster each wave
+		$EnemyTimer.wait_time = max($EnemyTimer.wait_time - 0.2, 0.5)
+	
+	$EnemyTimer.start()
 	
 	$EnemyTimer.start()
 

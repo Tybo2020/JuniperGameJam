@@ -2,6 +2,9 @@ extends CharacterBody2D
 @onready var aim_line: Line2D = $AimLine
 @onready var animatedSprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var shieldSprite: AnimatedSprite2D = $shieldSprite
+@onready var bounceSfx: AudioStreamPlayer = $BounceSfx
+@onready var chargeSfx: AudioStreamPlayer = $ChargeSfx
+@onready var launchReadySfx: AudioStreamPlayer = $LaunchReadySfx
 var currentAnimation: String = ""
 
 @export var lowChargeColor: Color = Color.YELLOW
@@ -28,6 +31,7 @@ var maxComboVelocity: Vector2 = Vector2.ZERO
 @export var maxLaunchStrength: float = 1000.0 
 @export var launchDecay: float = 5
 @export var killVelocityThreshold: float = 800.0
+@export var enemyDamageThreshold: float = 200.0
 var isKillingEnemy: bool = false
 
 var isCharging: bool = false
@@ -54,6 +58,7 @@ const SPEED = 100.0
 
 signal hit
 signal deflect
+signal healed
 signal max_health_changed(newMax: int)
 
 var isInvulnerable: bool = false
@@ -163,9 +168,19 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		currentChargeTime += delta
 		currentChargeTime = clamp(currentChargeTime, 0.0, maxChargeTime)
+		var previousRatio = chargeRatio
 		chargeRatio = currentChargeTime / maxChargeTime
 		
-		# Use mouse for aim line direction
+		# Start charge sound when charging begins
+		if previousRatio == 0.0 and chargeRatio > 0.0:
+			chargeSfx.play(0.5)
+		
+		# Play launch ready sound exactly when max charge is reached
+		if chargeRatio >= 1.0 and previousRatio < 1.0:
+			chargeSfx.stop()
+			launchReadySfx.play()
+			get_tree().create_timer(0.7).timeout.connect(launchReadySfx.stop, CONNECT_ONE_SHOT)
+		
 		launchDirection = get_local_mouse_position().normalized()
 		update_aim_line()
 	
@@ -208,6 +223,7 @@ func _input(event):
 	if event.is_action_pressed("charge") and !isLaunched:
 		isCharging = true
 		currentChargeTime = 0.0
+		chargeRatio = 0.0 # reset so charge sound triggers correctly
 	
 	if event.is_action_released("charge") and isCharging and !isLaunched:
 		isCharging = false
@@ -221,6 +237,8 @@ func _input(event):
 			currentChargeTime = 0.0
 			chargeRatio = 0.0
 			aim_line.visible = false
+			chargeSfx.stop()
+			launchReadySfx.stop()
 	
 	if event.is_action_pressed("bounce") and canBounce:
 		shieldSprite.show()
@@ -240,10 +258,10 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 			obstacle.die()
 			obstacle.died.connect(func(): isKillingEnemy = false, CONNECT_ONE_SHOT)
 			return
-		elif velocity.length() > 200 && velocity.length() < killVelocityThreshold:
+		elif velocity.length() > enemyDamageThreshold && velocity.length() < killVelocityThreshold:
 			obstacle.hit()
-		elif velocity.length() < 200 && !isInvulnerable:
-			#_hit()
+		elif velocity.length() < enemyDamageThreshold && !isInvulnerable:
+			_hit()
 			pass
 			
 		#else:
@@ -258,7 +276,10 @@ func handleBounce(collision: KinematicCollision2D) -> void:
 func executeLaunch() -> void:
 	isCharging = false
 	isLaunched = true
+	chargeSfx.stop()
+	launchReadySfx.stop()
 	var launchForce = lerp(minLaunchStrength, maxLaunchStrength, chargeRatio)
+	chargeRatio = 0.0  # reset after using it
 	velocity = launchDirection * launchForce
 	aim_line.visible = false
 
@@ -311,8 +332,12 @@ func executeSuccessfulBounce(obstacle: Node2D, collision: KinematicCollision2D =
 		bounceCooldownTimer = null
 	canBounce = true
 	
-	_deflect()
-	
+	# Only increment combo if launched
+	if isLaunched:
+		bounceSfx.play(0.5)  # start at 0.5s
+		get_tree().create_timer(1).timeout.connect(bounceSfx.stop, CONNECT_ONE_SHOT)
+		_deflect()
+
 	return true
 	
 # Temporary function to show launch strength visually

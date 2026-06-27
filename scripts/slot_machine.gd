@@ -3,6 +3,8 @@ extends CanvasLayer
 @onready var leverHighlight = $lever_highlight
 @onready var cardContainer = $card_container
 @onready var descriptionLabel = $description_label
+@onready var spinSfx = $SpinSfx
+@onready var selectSfx = $SelectSfx
 
 var hasBeenPulled: bool = false
 signal spin_finished 
@@ -12,6 +14,7 @@ func _ready() -> void:
 	cardContainer.upgrade_chosen.connect(_on_upgrade_chosen)
 	cardContainer.show_description.connect(_on_card_hovered)
 	cardContainer.hide_description.connect(_on_card_unhovered)
+	
 	# Wait one frame before playing to ensure web renderer is ready
 	await get_tree().process_frame
 	slotMachineSprite.play("loop")
@@ -19,6 +22,9 @@ func _ready() -> void:
 func _on_clicked():
 	if hasBeenPulled:
 		return
+	
+	spinSfx.play()
+	get_tree().create_timer(5).timeout.connect(spinSfx.stop, CONNECT_ONE_SHOT)
 	hasBeenPulled = true
 	leverHighlight.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	slotMachineSprite.play("spin")
@@ -43,6 +49,9 @@ func _on_lever_hitbox_gui_input(event: InputEvent) -> void:
 		_on_clicked()
 
 func _on_upgrade_chosen() -> void:
+	selectSfx.play(0.5)
+	get_tree().create_timer(3).timeout.connect(selectSfx.stop, CONNECT_ONE_SHOT)
+	
 	cardContainer.clear_cards()
 	hide()
 	hasBeenPulled = false

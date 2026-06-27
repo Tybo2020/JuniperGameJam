@@ -19,8 +19,6 @@ script = ExtResource("1_b0foj")
 
 [node name="modifier_sprite" type="Sprite2D" parent="." unique_id=1501472375]
 position = Vector2(65.21602, 104)
-vframes = 2
-frame = 1
 
 [node name="name_label" type="Label" parent="." unique_id=523773816]
 layout_mode = 1

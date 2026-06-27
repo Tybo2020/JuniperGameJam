@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bk4sao3h357lh"
+path="res://.godot/imported/DSGNTonl_SKILL IMPACT-Deflected Hit_HY_PC.wav-2fe25f984a2b0c6a66816c2d10e397d6.sample"
+
+[deps]
+
+source_file="res://assets/audio/DSGNTonl_SKILL IMPACT-Deflected Hit_HY_PC.wav"
+dest_files=["res://.godot/imported/DSGNTonl_SKILL IMPACT-Deflected Hit_HY_PC.wav-2fe25f984a2b0c6a66816c2d10e397d6.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
